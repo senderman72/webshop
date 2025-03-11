@@ -7,7 +7,7 @@ export const get = async <T>(url: string): Promise<T> => {
     }
 
     const data: T = await response.json();
-    console.log("Färdig med att hämta data:", data);
+
     return data;
   } catch (error) {
     console.error("Fetch error:", error);
