@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { IProduct } from "../models/IProducts";
 import { getProduct } from "../services/productService/getProduct";
 
-const useProduct = (id: string) => {
+const useProduct = (id: number) => {
   const [product, setProduct] = useState<IProduct>();
 
   useEffect(() => {

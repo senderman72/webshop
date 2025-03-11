@@ -7,10 +7,18 @@ import {
   ProductImage,
   ProductTitle,
   ProductPrice,
+  DescriptionProduct,
 } from "../styled/styledProducts/ProductCards";
 
+import { useParams } from "react-router";
+import AddToCart from "./AddToCart";
+
 const ProductDescription = () => {
-  const { product } = useProduct("3");
+  const { id } = useParams<{ id: string }>();
+  const productId = id ? Number(id) : 0;
+
+  const { product } = useProduct(productId);
+
   return (
     <>
       <h1>Produkter</h1>
@@ -19,7 +27,15 @@ const ProductDescription = () => {
           <ProductImage src={product?.image} alt={product?.name} />
 
           <ProductTitle>{product?.name}</ProductTitle>
-          <ProductPrice>{product?.price} SEK</ProductPrice>
+          <ProductPrice>Pris: {product?.price} SEK</ProductPrice>
+          <DescriptionProduct>
+            Beskrivning: {product?.description}
+          </DescriptionProduct>
+          <DescriptionProduct>
+            Lagerstatus: {product?.stock}{" "}
+          </DescriptionProduct>
+          <DescriptionProduct>Kategori: {product?.category}</DescriptionProduct>
+          {product && <AddToCart product={product} />}
         </ProductCard>
       </ProductCardsWrapper>
     </>
