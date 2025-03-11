@@ -23,8 +23,29 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     window.dispatchEvent(new Event("storage"));
   };
 
+  const updateItemCount = (productId: number, change: number) => {
+    const updatedCart = cart
+      .map((item: any) => {
+        if (item.id === productId) {
+          const newCount = item.count + change;
+          if (newCount > 0) {
+            return { ...item, count: newCount };
+          }
+        }
+        return item;
+      })
+      .filter((item) => item.count > 0);
+
+    setCart(updatedCart);
+    setCartCount(updatedCart.reduce((total, item) => total + item.count, 0));
+
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
   return (
-    <CartContext.Provider value={{ cart, cartCount, addToCart }}>
+    <CartContext.Provider
+      value={{ cart, cartCount, addToCart, updateItemCount }}
+    >
       {children}
     </CartContext.Provider>
   );

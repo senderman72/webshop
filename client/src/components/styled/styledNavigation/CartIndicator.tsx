@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 
 export const CartIndicator = styled.div`
   position: absolute;
-  top: 6px;
+  top: 26px;
   right: 20px;
   background-color: red;
   color: white;
