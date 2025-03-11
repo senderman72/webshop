@@ -1,36 +1,26 @@
 import React from "react";
-import { NavLink } from "react-router";
+
+import {
+  NavigationWrapper,
+  NavigationList,
+  NavigationLink,
+} from "../styled/styledNavigation/NavigationWrapper";
 
 const Navigation = () => {
   return (
-    <nav className="p-4 bg-blue-500 text-white">
-      <ul className="flex space-x-4">
+    <NavigationWrapper>
+      <NavigationList>
         <li>
-          <NavLink
-            to="/"
-            className={({ isActive }) => (isActive ? "font-bold" : "")}
-          >
-            Home
-          </NavLink>
+          <NavigationLink to="/">Home</NavigationLink>
         </li>
         <li>
-          <NavLink
-            to="/products"
-            className={({ isActive }) => (isActive ? "font-bold" : "")}
-          >
-            Products
-          </NavLink>
+          <NavigationLink to="/products">Products</NavigationLink>
         </li>
         <li>
-          <NavLink
-            to="/admin"
-            className={({ isActive }) => (isActive ? "font-bold" : "")}
-          >
-            Admin
-          </NavLink>
+          <NavigationLink to="/admin">Admin</NavigationLink>
         </li>
-      </ul>
-    </nav>
+      </NavigationList>
+    </NavigationWrapper>
   );
 };
 

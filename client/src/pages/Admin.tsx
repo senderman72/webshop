@@ -1,7 +1,12 @@
 import React from "react";
+import DisplayAdmin from "../components/admin/DisplayAdmin";
 
 const Admin = () => {
-  return <div>Admin</div>;
+  return (
+    <>
+      <DisplayAdmin />
+    </>
+  );
 };
 
 export default Admin;
