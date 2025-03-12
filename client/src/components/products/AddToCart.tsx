@@ -1,14 +1,19 @@
-import React from "react";
+import { useContext } from "react";
 import { AddToCartBtn } from "../styled/styledProducts/ProductCards";
 import { IProduct } from "../../models/IProducts";
+import { CartContext } from "../../contexts/CartContext";
+import React from "react";
 
 const AddToCart = ({ product }: { product: IProduct }) => {
-  const handleAddToCart = () => {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cart.push(product);
-    localStorage.setItem("cart", JSON.stringify(cart));
-  };
+  const cartContext = useContext(CartContext);
 
-  return <AddToCartBtn onClick={handleAddToCart}>Lägg till</AddToCartBtn>;
+  if (!cartContext) return null;
+
+  const { addToCart } = cartContext;
+
+  return (
+    <AddToCartBtn onClick={() => addToCart(product)}>Lägg till</AddToCartBtn>
+  );
 };
+
 export default AddToCart;

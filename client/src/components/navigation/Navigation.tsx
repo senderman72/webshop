@@ -14,7 +14,6 @@ const Navigation = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   if (!cartContext) return null;
-
   const { cartCount } = cartContext;
 
   const toggleCart = () => {

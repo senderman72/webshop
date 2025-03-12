@@ -5,47 +5,34 @@ import { IProduct } from "../models/IProducts";
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [cart, setCart] = useState<IProduct[]>([]);
+  const initialCart = localStorage.getItem("cart")
+    ? JSON.parse(localStorage.getItem("cart") || "[]")
+    : [];
+
+  const [cart, setCart] = useState<IProduct[]>(initialCart);
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCart(storedCart);
-    setCartCount(storedCart.length);
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      const parsedCart = JSON.parse(savedCart);
+      setCart(parsedCart);
+      setCartCount(parsedCart.length);
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+    setCartCount(cart.length);
+  }, [cart]);
 
   const addToCart = (product: IProduct) => {
     const newCart = [...cart, product];
     setCart(newCart);
-    setCartCount(newCart.length);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-
-    window.dispatchEvent(new Event("storage"));
-  };
-
-  const updateItemCount = (productId: number, change: number) => {
-    const updatedCart = cart
-      .map((item: any) => {
-        if (item.id === productId) {
-          const newCount = item.count + change;
-          if (newCount > 0) {
-            return { ...item, count: newCount };
-          }
-        }
-        return item;
-      })
-      .filter((item) => item.count > 0);
-
-    setCart(updatedCart);
-    setCartCount(updatedCart.reduce((total, item) => total + item.count, 0));
-
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   return (
-    <CartContext.Provider
-      value={{ cart, cartCount, addToCart, updateItemCount }}
-    >
+    <CartContext.Provider value={{ cart, cartCount, addToCart }}>
       {children}
     </CartContext.Provider>
   );

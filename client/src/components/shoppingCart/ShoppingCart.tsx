@@ -10,7 +10,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
     return <div>Laddar...</div>;
   }
 
-  const { cart, updateItemCount } = cartContext;
+  const { cart } = cartContext;
 
   if (!isOpen) return null;
 
@@ -26,18 +26,6 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
     return acc;
   }, [] as { product: (typeof cart)[0]; count: number }[]);
 
-  const handleIncrease = (productId: number) => {
-    if (productId !== null) {
-      updateItemCount(productId, 1);
-    }
-  };
-
-  const handleDecrease = (productId: number) => {
-    if (productId !== null) {
-      updateItemCount(productId, -1);
-    }
-  };
-
   return (
     <CartWrapper>
       {groupedCart.length > 0 ? (
@@ -51,15 +39,6 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
             <span>{group.product.name}</span>
             <span>{group.product.price} SEK</span>
             <span>Antal: {group.count}</span>
-            <div>
-              <button onClick={() => handleDecrease(group.product.id)}>
-                -
-              </button>
-              <span>Antal: {group.count}</span>
-              <button onClick={() => handleIncrease(group.product.id)}>
-                +
-              </button>
-            </div>
           </CartItem>
         ))
       ) : (
