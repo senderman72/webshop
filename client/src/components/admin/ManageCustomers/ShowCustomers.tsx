@@ -5,6 +5,7 @@ import {
   CustomerList,
   StyledCustomerInput,
 } from "../../styled/styledAdmin/customerStyled/StyledCustomers";
+import CreateCustomer from "./CreateCustomer";
 
 const ShowCustomers = () => {
   const { customers } = useCustomer();
@@ -12,36 +13,47 @@ const ShowCustomers = () => {
   console.log(customers);
 
   return (
-    <CustomerList>
-      {customers?.map((customer) => {
-        return (
-          <CustomerCard key={customer.id}>
-            <StyledCustomerInput
-              type="text"
-              value={customer.firstname}
-              disabled
-            />
-            <StyledCustomerInput
-              type="text"
-              value={customer.lastname}
-              disabled
-            />
-            <StyledCustomerInput type="text" value={customer.phone} disabled />
-            <StyledCustomerInput type="text" value={customer.email} disabled />
-            <StyledCustomerInput
-              type="text"
-              value={customer.street_address}
-              disabled
-            />
-            <StyledCustomerInput
-              type="text"
-              value={customer.postal_code}
-              disabled
-            />
-          </CustomerCard>
-        );
-      })}
-    </CustomerList>
+    <>
+      <CreateCustomer />
+      <CustomerList>
+        {customers?.map((customer) => {
+          return (
+            <CustomerCard key={customer.id}>
+              <StyledCustomerInput
+                type="text"
+                value={customer.firstname}
+                disabled
+              />
+              <StyledCustomerInput
+                type="text"
+                value={customer.lastname}
+                disabled
+              />
+              <StyledCustomerInput
+                type="text"
+                value={customer.phone}
+                disabled
+              />
+              <StyledCustomerInput
+                type="text"
+                value={customer.email}
+                disabled
+              />
+              <StyledCustomerInput
+                type="text"
+                value={customer.street_address}
+                disabled
+              />
+              <StyledCustomerInput
+                type="text"
+                value={customer.postal_code}
+                disabled
+              />
+            </CustomerCard>
+          );
+        })}
+      </CustomerList>
+    </>
   );
 };
 

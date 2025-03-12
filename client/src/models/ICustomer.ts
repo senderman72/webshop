@@ -1,5 +1,5 @@
 export interface ICustomer {
-  id: number | null;
+  id?: number | null;
   firstname: string;
   lastname: string;
   email: string;
@@ -9,5 +9,5 @@ export interface ICustomer {
   postal_code: string;
   city: string;
   country: string;
-  created_at: string;
+  created_at?: string;
 }
