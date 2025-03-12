@@ -7,4 +7,5 @@ export interface IProduct {
   category: string;
   image: string;
   created_at: string;
+  count?: number;
 }

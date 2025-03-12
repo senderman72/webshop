@@ -1,8 +1,9 @@
 import styled from "styled-components";
+import { primaryColor } from "../GeneralStyles";
 
 export const CartWrapper = styled.div`
   position: absolute;
-  top: 12dvh;
+  top: 11.9dvh;
   right: 0;
   width: 40rem;
   max-width: 100%;
@@ -11,6 +12,8 @@ export const CartWrapper = styled.div`
   border-radius: 5px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   padding: 2rem;
+
+  background-color: ${primaryColor};
   z-index: 1000;
 `;
 
@@ -26,15 +29,20 @@ export const CartItem = styled.div`
   }
 
   img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 5px;
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
   }
 
   span {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    color: black;
+    color: white;
   }
+`;
+
+export const TotalPrice = styled.span`
+  font-size: 17px;
+  font-weight: 600;
+  color: white;
 `;

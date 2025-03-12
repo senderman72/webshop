@@ -6,8 +6,8 @@ import {
   ProductImage,
   ProductPrice,
   ProductTitle,
+  StyledLink,
 } from "../styled/styledProducts/ProductCards";
-import { Link } from "react-router";
 
 const ProductList = () => {
   const { products } = useProducts();
@@ -22,7 +22,7 @@ const ProductList = () => {
 
             <ProductTitle>{product.name}</ProductTitle>
             <ProductPrice>{product.price} SEK</ProductPrice>
-            <Link to={`/products/${product.id}`}>mer info</Link>
+            <StyledLink to={`/products/${product.id}`}>mer info</StyledLink>
           </ProductCard>
         ))}
       </ProductCardsWrapper>
