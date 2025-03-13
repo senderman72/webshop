@@ -7,15 +7,23 @@ import {
   StyledCustomerInput,
 } from "../../styled/styledAdmin/customerStyled/StyledCustomers";
 import CreateCustomer from "./CreateCustomer";
+import DeleteCustomer from "./DeleteCustomer";
+import { ICustomer } from "../../../models/ICustomer";
 
 const ShowCustomers = () => {
-  const { customers } = useCustomer();
+  const { customers, setCustomers } = useCustomer();
 
-  console.log(customers);
+  const onDeleteCustomer = (id: number) => {
+    setCustomers((prev) => prev?.filter((customer) => customer.id !== id));
+  };
+
+  const onAddCustomer = (newCustomer: ICustomer) => {
+    setCustomers((prev) => (prev ? [...prev, newCustomer] : [newCustomer]));
+  };
 
   return (
     <CustomersWrapper>
-      <CreateCustomer />
+      <CreateCustomer onAddCustomer={onAddCustomer} />
       <CustomerList>
         {customers?.map((customer) => {
           return (
@@ -49,6 +57,10 @@ const ShowCustomers = () => {
                 type="text"
                 value={customer.postal_code}
                 disabled
+              />
+              <DeleteCustomer
+                onDelete={onDeleteCustomer}
+                id={customer.id ?? 0}
               />
             </CustomerCard>
           );

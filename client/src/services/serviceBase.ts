@@ -35,3 +35,20 @@ export const create = async <T>(url: string, body: unknown): Promise<T> => {
     throw error;
   }
 };
+
+export const remove = async (url: string): Promise<boolean> => {
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return false;
+  }
+};

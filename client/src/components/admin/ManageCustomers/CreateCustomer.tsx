@@ -6,8 +6,13 @@ import {
   Inputbox,
 } from "../../styled/styledAdmin/customerStyled/CreatCustomerForm";
 import { AddToCartBtn } from "../../styled/styledProducts/ProductCards";
+import { ICustomer } from "../../../models/ICustomer";
 
-const CreateCustomer = () => {
+interface CreateCustomerProps {
+  onAddCustomer: (newCustomer: ICustomer) => void;
+}
+
+const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
   const { addCustomer } = useCustomer();
 
   const [formData, setFormData] = useState({
@@ -33,7 +38,12 @@ const CreateCustomer = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const newCustomer = {
+      ...formData,
+    };
+
     addCustomer(formData);
+    onAddCustomer(newCustomer);
   };
 
   return (

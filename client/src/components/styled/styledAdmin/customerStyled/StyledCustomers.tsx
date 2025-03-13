@@ -10,7 +10,7 @@ export const CustomersWrapper = styled.section`
 export const CustomerList = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 1rem;
 `;
 

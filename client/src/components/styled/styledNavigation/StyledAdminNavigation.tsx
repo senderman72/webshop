@@ -1,15 +1,16 @@
 import { NavLink } from "react-router";
 import styled from "styled-components";
-import { primaryColor } from "../GeneralStyles";
 
 export const AdminNavigationWrapper = styled.nav`
   width: 12dvh;
   height: 100dvh;
-  background-color: ${primaryColor};
+  background-color: black;
   padding: 0 2rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 3rem;
 
   position: fixed;
   left: 0;
@@ -35,4 +36,9 @@ export const NavigationLink = styled(NavLink)`
   .active {
     text-decoration: underline;
   }
+`;
+
+export const AdminH1 = styled.h1`
+  font-size: 20px;
+  color: white;
 `;

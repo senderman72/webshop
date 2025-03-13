@@ -22,13 +22,14 @@ const useCustomer = () => {
     try {
       await createCustomer(customer);
 
-      setCustomers((prev) => (prev ? [...prev, customer] : [customer]));
+      const updatedCustomers = await getCustomers();
+      setCustomers(updatedCustomers);
     } catch {
       console.log("Kunde inte skapa kund.");
     }
   };
 
-  return { customers, addCustomer };
+  return { customers, addCustomer, setCustomers };
 };
 
 export default useCustomer;

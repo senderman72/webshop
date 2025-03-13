@@ -2,6 +2,7 @@ import React from "react";
 
 import { NavigationLink } from "../styled/styledNavigation/NavigationWrapper";
 import {
+  AdminH1,
   AdminNavigationList,
   AdminNavigationWrapper,
 } from "../styled/styledNavigation/StyledAdminNavigation";
@@ -9,6 +10,7 @@ import {
 const AdminNavigation = () => {
   return (
     <AdminNavigationWrapper>
+      <AdminH1>Admin</AdminH1>
       <AdminNavigationList>
         <li>
           <NavigationLink to="customers">customers</NavigationLink>
