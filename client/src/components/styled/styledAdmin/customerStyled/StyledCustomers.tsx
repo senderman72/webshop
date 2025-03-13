@@ -1,5 +1,12 @@
 import styled from "styled-components";
 
+export const CustomersWrapper = styled.section`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const CustomerList = styled.div`
   width: 100%;
   display: flex;

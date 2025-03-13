@@ -1,13 +1,14 @@
 import React from "react";
-import { Outlet } from "react-router";
 import Navigation from "./components/navigation/Navigation";
+import { Outlet } from "react-router";
+import AdminNavigation from "./components/navigation/AdminNavigation";
 import { Main } from "./components/styled/layout/StyledLayout";
 
-const Layout = () => {
+const AdminLayout = () => {
   return (
     <>
       <header>
-        <Navigation />
+        <AdminNavigation />
       </header>
       <Main>
         <Outlet />
@@ -16,4 +17,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default AdminLayout;

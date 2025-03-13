@@ -3,6 +3,7 @@ import useCustomer from "../../../hooks/useCustomer";
 import {
   CustomerCard,
   CustomerList,
+  CustomersWrapper,
   StyledCustomerInput,
 } from "../../styled/styledAdmin/customerStyled/StyledCustomers";
 import CreateCustomer from "./CreateCustomer";
@@ -13,7 +14,7 @@ const ShowCustomers = () => {
   console.log(customers);
 
   return (
-    <>
+    <CustomersWrapper>
       <CreateCustomer />
       <CustomerList>
         {customers?.map((customer) => {
@@ -53,7 +54,7 @@ const ShowCustomers = () => {
           );
         })}
       </CustomerList>
-    </>
+    </CustomersWrapper>
   );
 };
 

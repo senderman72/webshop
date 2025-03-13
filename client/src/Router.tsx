@@ -3,9 +3,12 @@ import { createBrowserRouter } from "react-router";
 import Home from "./pages/Home";
 import Layout from "./Layout";
 import Products from "./pages/Products";
-import Admin from "./pages/Admin";
 
 import ProductDescription from "./components/products/ProductDescription";
+import AdminLayout from "./AdminLayout";
+import ShowCustomers from "./components/admin/ManageCustomers/ShowCustomers";
+import ShowOrders from "./components/admin/ManageOrders/ShowOrders";
+import ShowProducts from "./components/admin/manageProducts/ShowProducts";
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +29,21 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin",
-        element: <Admin />,
+        element: <AdminLayout />,
+        children: [
+          {
+            path: "customers",
+            element: <ShowCustomers />,
+          },
+          {
+            path: "orders",
+            element: <ShowOrders />,
+          },
+          {
+            path: "products",
+            element: <ShowProducts />,
+          },
+        ],
       },
     ],
   },

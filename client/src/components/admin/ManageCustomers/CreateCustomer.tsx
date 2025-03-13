@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import useCustomer from "../../../hooks/useCustomer";
+import {
+  Form,
+  Input,
+  Inputbox,
+} from "../../styled/styledAdmin/customerStyled/CreatCustomerForm";
+import { AddToCartBtn } from "../../styled/styledProducts/ProductCards";
 
 const CreateCustomer = () => {
   const { addCustomer } = useCustomer();
@@ -31,72 +37,83 @@ const CreateCustomer = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="firstname"
-        placeholder="First Name"
-        value={formData.firstname}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="lastname"
-        placeholder="Last Name"
-        value={formData.lastname}
-        onChange={handleChange}
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
-      />
-      <input
-        type="tel"
-        name="phone"
-        placeholder="Phone"
-        value={formData.phone}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="street_address"
-        placeholder="Street Address"
-        value={formData.street_address}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="postal_code"
-        placeholder="Postal Code"
-        value={formData.postal_code}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="city"
-        placeholder="City"
-        value={formData.city}
-        onChange={handleChange}
-      />
-      <input
+    <Form onSubmit={handleSubmit}>
+      <Inputbox>
+        <Input
+          type="text"
+          name="firstname"
+          placeholder="First Name"
+          value={formData.firstname}
+          onChange={handleChange}
+        />
+        <Input
+          type="text"
+          name="lastname"
+          placeholder="Last Name"
+          value={formData.lastname}
+          onChange={handleChange}
+        />
+      </Inputbox>
+      <Inputbox>
+        <Input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <Input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+      </Inputbox>
+      <Inputbox>
+        <Input
+          type="tel"
+          name="phone"
+          placeholder="Phone"
+          value={formData.phone}
+          onChange={handleChange}
+        />
+
+        <Input
+          type="text"
+          name="street_address"
+          placeholder="Street Address"
+          value={formData.street_address}
+          onChange={handleChange}
+        />
+      </Inputbox>
+      <Inputbox>
+        <Input
+          type="text"
+          name="postal_code"
+          placeholder="Postal Code"
+          value={formData.postal_code}
+          onChange={handleChange}
+        />
+
+        <Input
+          type="text"
+          name="city"
+          placeholder="City"
+          value={formData.city}
+          onChange={handleChange}
+        />
+      </Inputbox>
+
+      <Input
         type="text"
         name="country"
         placeholder="Country"
         value={formData.country}
         onChange={handleChange}
       />
-      <button type="submit">Create Customer</button>
-    </form>
+      <AddToCartBtn type="submit">Create Customer</AddToCartBtn>
+    </Form>
   );
 };
 
