@@ -6,14 +6,15 @@ import {
   CustomerCard,
   StyledCustomerInput,
 } from "../../styled/styledAdmin/customerStyled/StyledCustomers";
-import { StyledEditButton } from "../../styled/styledAdmin/customerStyled/UpdateCustomer";
+// import { StyledEditButton } from "../../styled/styledAdmin/customerStyled/UpdateCustomer";
 
-import DeleteCustomer from "../ManageCustomers/DeleteCustomer";
-import SaveCustomer from "../ManageCustomers/SaveCustomer";
+// import DeleteCustomer from "../ManageCustomers/DeleteCustomer";
+// import SaveCustomer from "../ManageCustomers/SaveCustomer";
 import { IProduct } from "../../../models/IProducts";
+import CreateProduct from "./CreateProduct";
 
 const ShowProducts = () => {
-  const { products } = useProducts();
+  const { products, setProducts } = useProducts();
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [editedProduct, setEditedProduct] = useState<IProduct | null>(null);
 
@@ -26,17 +27,22 @@ const ShowProducts = () => {
     }
   };
 
-  const onSaveProduct = async (updatedProduct: IProduct) => {
-    // Skicka uppdaterad produkt till API
-    setEditingProductId(null);
+  // const onSaveProduct = async (updatedProduct: IProduct) => {
+  //   // Skicka uppdaterad produkt till API
+  //   setEditingProductId(null);
+  // };
+
+  const onAddProduct = (newProduct: IProduct) => {
+    setProducts((prev) => (prev ? [...prev, newProduct] : [newProduct]));
   };
 
-  const onDeleteProduct = (id: number) => {
-    // Ta bort produkten från listan efter borttagning
-  };
+  // const onDeleteProduct = (id: number) => {
+  //   // Ta bort produkten från listan efter borttagning
+  // };
 
   return (
     <CustomersWrapper>
+      <CreateProduct onAddProduct={onAddProduct} />
       <CustomerList>
         {products?.map((products) => {
           const isEditing = editingProductId === products.id;
@@ -70,7 +76,7 @@ const ShowProducts = () => {
                 disabled={!isEditing}
                 onChange={(e) => handleInputChange(e, "stock")}
               />
-              {!isEditing ? (
+              {/* {!isEditing ? (
                 <StyledEditButton
                   onClick={() => {
                     setEditingProductId(products.id);
@@ -85,7 +91,7 @@ const ShowProducts = () => {
               <DeleteCustomer
                 onDelete={onDeleteProduct}
                 id={products.id ?? 0}
-              />
+              /> */}
             </CustomerCard>
           );
         })}

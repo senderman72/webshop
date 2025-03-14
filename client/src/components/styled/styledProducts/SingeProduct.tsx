@@ -8,6 +8,7 @@ export const SingleProductWrapper = styled.div`
   align-items: center;
   gap: 4rem;
   padding: 2rem 0;
+  margin-top: 7rem;
 
   @media (max-width: 800px) {
     width: 100%;

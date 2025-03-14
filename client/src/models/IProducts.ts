@@ -9,3 +9,6 @@ export interface IProduct {
   created_at: string;
   count?: number;
 }
+
+export type ProductUpdate = Omit<IProduct, "created_at">;
+export type ProductCreate = Omit<IProduct, "created_at">;

@@ -10,6 +10,7 @@ export const ProductCardsWrapper = styled.div`
   place-content: center;
   gap: 2rem;
   padding: 0px 2rem;
+  margin-top: 5rem;
 
   /* Responsiv design */
   @media (max-width: 1200px) {
