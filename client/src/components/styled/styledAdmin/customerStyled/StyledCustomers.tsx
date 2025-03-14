@@ -12,6 +12,7 @@ export const CustomerList = styled.div`
   display: flex;
   flex-direction: column-reverse;
   gap: 1rem;
+  margin-bottom: 5rem;
 `;
 
 export const CustomerCard = styled.form`

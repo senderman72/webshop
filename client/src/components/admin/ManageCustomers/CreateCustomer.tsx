@@ -6,10 +6,10 @@ import {
   Inputbox,
 } from "../../styled/styledAdmin/customerStyled/CreatCustomerForm";
 import { AddToCartBtn } from "../../styled/styledProducts/ProductCards";
-import { ICustomer } from "../../../models/ICustomer";
+import { CustomerCreate } from "../../../models/ICustomer";
 
 interface CreateCustomerProps {
-  onAddCustomer: (newCustomer: ICustomer) => void;
+  onAddCustomer: (newCustomer: CustomerCreate) => void;
 }
 
 const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
@@ -41,6 +41,18 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
     const newCustomer = {
       ...formData,
     };
+
+    setFormData({
+      firstname: "",
+      lastname: "",
+      email: "",
+      password: "",
+      phone: "",
+      street_address: "",
+      postal_code: "",
+      city: "",
+      country: "",
+    });
 
     addCustomer(formData);
     onAddCustomer(newCustomer);

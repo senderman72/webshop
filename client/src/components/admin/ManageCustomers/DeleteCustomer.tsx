@@ -14,7 +14,7 @@ const DeleteCustomer = ({ id, onDelete }: DeleteCustomerProps) => {
       onDelete(id);
     }
   };
-  return <DeleteButton onClick={handleDelete}>Delete Customer</DeleteButton>;
+  return <DeleteButton onClick={handleDelete}>Delete </DeleteButton>;
 };
 
 export default DeleteCustomer;

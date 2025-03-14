@@ -1,14 +1,13 @@
-import { ICustomer } from "../../models/ICustomer";
+import { CustomerCreate } from "../../models/ICustomer";
 import { create } from "../serviceBase";
 
-export const createCustomer = async (customer: ICustomer): Promise<void> => {
+export const createCustomer = async (
+  customer: CustomerCreate
+): Promise<void> => {
   try {
-    const response = await create<{ message: string }>(
-      "http://localhost:3000/customers",
-      customer
-    );
+    const response = await create("http://localhost:3000/customers", customer);
 
-    console.log(response.message);
+    console.log(response);
   } catch (error) {
     console.error("Error creating customer:", error);
     throw error;

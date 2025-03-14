@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ICustomer } from "../models/ICustomer";
+import { CustomerCreate, ICustomer } from "../models/ICustomer";
 import { getCustomers } from "../services/customerService/getCustomers";
 import { createCustomer } from "../services/customerService/createCustomer";
 
@@ -18,7 +18,7 @@ const useCustomer = () => {
     fetchCustomers();
   }, []);
 
-  const addCustomer = async (customer: ICustomer) => {
+  const addCustomer = async (customer: CustomerCreate) => {
     try {
       await createCustomer(customer);
 

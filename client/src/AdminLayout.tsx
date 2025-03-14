@@ -3,6 +3,7 @@ import React from "react";
 import { Outlet } from "react-router";
 import AdminNavigation from "./components/navigation/AdminNavigation";
 import { Main } from "./components/styled/layout/StyledLayout";
+import { AdminHeaderWrapper } from "./components/styled/styledAdmin/AdminHeader";
 
 const AdminLayout = () => {
   return (
@@ -10,6 +11,9 @@ const AdminLayout = () => {
       <header>
         <AdminNavigation />
       </header>
+      <AdminHeaderWrapper>
+        <h1>Välj ett alternativ att administrera i sidomenyn</h1>
+      </AdminHeaderWrapper>
       <Main>
         <Outlet />
       </Main>
