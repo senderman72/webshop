@@ -1,5 +1,5 @@
 import React from "react";
-import { CustomerUpdate, ICustomer } from "../../../models/ICustomer";
+import { CustomerUpdate } from "../../../models/ICustomer";
 import { updateCustomer } from "../../../services/customerService/updateCustomer";
 import { StyledSaveButton } from "../../styled/styledAdmin/customerStyled/UpdateCustomer";
 
