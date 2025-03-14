@@ -16,6 +16,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
   const { addCustomer } = useCustomer();
 
   const [formData, setFormData] = useState({
+    id: 0,
     firstname: "",
     lastname: "",
     email: "",
@@ -43,6 +44,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
     };
 
     setFormData({
+      id: 0,
       firstname: "",
       lastname: "",
       email: "",
