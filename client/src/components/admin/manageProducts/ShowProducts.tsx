@@ -6,12 +6,14 @@ import {
   CustomerCard,
   StyledCustomerInput,
 } from "../../styled/styledAdmin/customerStyled/StyledCustomers";
-// import { StyledEditButton } from "../../styled/styledAdmin/customerStyled/UpdateCustomer";
+import { StyledEditButton } from "../../styled/styledAdmin/customerStyled/UpdateCustomer";
 
-// import DeleteCustomer from "../ManageCustomers/DeleteCustomer";
-// import SaveCustomer from "../ManageCustomers/SaveCustomer";
 import { IProduct } from "../../../models/IProducts";
 import CreateProduct from "./CreateProduct";
+
+import { ProductImageAdmin } from "../../styled/styledAdmin/productsStyled/productImage";
+import DeleteProduct from "./DeleteProduct";
+import SaveProduct from "./SaveProduct";
 
 const ShowProducts = () => {
   const { products, setProducts } = useProducts();
@@ -27,18 +29,23 @@ const ShowProducts = () => {
     }
   };
 
-  // const onSaveProduct = async (updatedProduct: IProduct) => {
-  //   // Skicka uppdaterad produkt till API
-  //   setEditingProductId(null);
-  // };
+  const onSaveProduct = async (updatedProduct: IProduct) => {
+    setProducts((prevCustomers) =>
+      prevCustomers?.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product
+      )
+    );
+    setEditedProduct(updatedProduct);
+    setEditingProductId(null);
+  };
 
   const onAddProduct = (newProduct: IProduct) => {
     setProducts((prev) => (prev ? [...prev, newProduct] : [newProduct]));
   };
 
-  // const onDeleteProduct = (id: number) => {
-  //   // Ta bort produkten från listan efter borttagning
-  // };
+  const onDeleteProduct = (id: number) => {
+    setProducts((prev) => prev?.filter((product) => product.id !== id));
+  };
 
   return (
     <CustomersWrapper>
@@ -48,6 +55,7 @@ const ShowProducts = () => {
           const isEditing = editingProductId === products.id;
           return (
             <CustomerCard key={products.id}>
+              <ProductImageAdmin src={products.image} alt={products.name} />
               <h5>Namn:</h5>
               <StyledCustomerInput
                 type="text"
@@ -76,7 +84,7 @@ const ShowProducts = () => {
                 disabled={!isEditing}
                 onChange={(e) => handleInputChange(e, "stock")}
               />
-              {/* {!isEditing ? (
+              {!isEditing ? (
                 <StyledEditButton
                   onClick={() => {
                     setEditingProductId(products.id);
@@ -86,12 +94,9 @@ const ShowProducts = () => {
                   Redigera
                 </StyledEditButton>
               ) : (
-                <SaveCustomer product={editedProduct!} onSave={onSaveProduct} />
+                <SaveProduct product={editedProduct!} onSave={onSaveProduct} />
               )}
-              <DeleteCustomer
-                onDelete={onDeleteProduct}
-                id={products.id ?? 0}
-              /> */}
+              <DeleteProduct onDelete={onDeleteProduct} id={products.id ?? 0} />
             </CustomerCard>
           );
         })}

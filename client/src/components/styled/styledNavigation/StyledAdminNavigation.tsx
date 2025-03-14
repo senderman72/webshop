@@ -2,7 +2,7 @@ import { NavLink } from "react-router";
 import styled from "styled-components";
 
 export const AdminNavigationWrapper = styled.nav`
-  width: 7dvw;
+  width: 100px;
   height: 100dvh;
   background-color: black;
   padding: 0 2rem;

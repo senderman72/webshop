@@ -14,7 +14,7 @@ interface CreateProductProps {
   onAddProduct: (newProduct: ProductCreate) => void;
 }
 
-const CreateCustomer = ({ onAddProduct }: CreateProductProps) => {
+const CreateProduct = ({ onAddProduct }: CreateProductProps) => {
   const { addProduct } = useProducts();
 
   const [formData, setFormData] = useState({
@@ -114,4 +114,4 @@ const CreateCustomer = ({ onAddProduct }: CreateProductProps) => {
   );
 };
 
-export default CreateCustomer;
+export default CreateProduct;

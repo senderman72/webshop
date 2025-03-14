@@ -22,13 +22,9 @@ const SaveCustomer = ({ customer, onSave }: SaveCustomerProps) => {
     console.log("Saving customer with data:", customer);
 
     try {
-      const response = await updateCustomer(customer.id, customer);
-      if (response?.message === "Customer updated") {
-        console.log("Calling onSave function");
-        onSave(customer);
-      } else {
-        console.error("Failed to update customer:", response?.message);
-      }
+      await updateCustomer(customer.id, customer);
+
+      onSave(customer);
     } catch (error) {
       console.error("Error updating customer:", error);
     }

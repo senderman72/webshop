@@ -1,20 +1,23 @@
 import React from "react";
-import { deleteCustomer } from "../../../services/customerService/deleteCustomer";
 import { DeleteButton } from "../../styled/styledAdmin/customerStyled/DeleteCustomerStyles";
+import { deleteProduct } from "../../../services/productService/deleteProduct";
 
-interface DeleteCustomerProps {
+interface DeleteProductProps {
   id: number;
   onDelete: (id: number) => void;
 }
 
-const DeleteCustomer = ({ id, onDelete }: DeleteCustomerProps) => {
+const DeleteProduct = ({ id, onDelete }: DeleteProductProps) => {
   const handleDelete = async () => {
-    const success = await deleteCustomer(id);
+    const success = await deleteProduct(id);
     if (success) {
+      console.log("Produkten togs bort från databasen");
       onDelete(id);
+    } else {
+      console.error("Misslyckades med att ta bort produkten");
     }
   };
   return <DeleteButton onClick={handleDelete}>Delete </DeleteButton>;
 };
 
-export default DeleteCustomer;
+export default DeleteProduct;
