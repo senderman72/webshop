@@ -19,3 +19,5 @@ export interface IOrder {
   customers_created_at: string;
   order_items: IOrderItem[];
 }
+
+export type OrderStatusUpdate = Pick<IOrder, "order_status">;

@@ -10,8 +10,8 @@ import {
 import { IOrder } from "../../../models/IOrder";
 import { StyledEditButton } from "../../styled/styledAdmin/customerStyled/UpdateCustomer";
 
-import SaveProduct from "../manageProducts/SaveProduct";
 import DeleteOrder from "./DeleteOrder";
+import UpdateOrder from "./UpdateOrder";
 
 const ShowOrders = () => {
   const { orders, setOrders } = useOrders();
@@ -20,78 +20,87 @@ const ShowOrders = () => {
 
   const onDeleteOrder = (id: number) => {
     setOrders((prev) => prev?.filter((order) => order.id !== id));
+  };
 
-    const handleInputChange = (
-      e: React.ChangeEvent<HTMLInputElement>,
-      field: keyof IOrder
-    ) => {
-      if (editedOrder) {
-        setEditedOrder({
-          ...editedOrder,
-          [field]: e.target.value,
-        });
-      }
-    };
+  const handleOrderStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (editedOrder) {
+      setEditedOrder({
+        ...editedOrder,
+        order_status: e.target.value,
+      });
+    }
+  };
+
+  const onSaveOrder = (updated: IOrder) => {
+    setOrders((prev) =>
+      prev?.map((order) =>
+        order.id === updated.id
+          ? { ...order, order_status: updated.order_status }
+          : order
+      )
+    );
+    setEditingOrderId(null);
+    setEditedOrder(null);
   };
 
   return (
     <CustomersWrapper>
       <CustomerList>
-        {orders?.map((orders) => {
-          const isEditing = editingOrderId === orders.id;
+        {orders?.map((order) => {
+          const isEditing = editingOrderId === order.id;
           return (
-            <CustomerCard key={orders.id}>
+            <CustomerCard key={order.id}>
               <h5>id:</h5>
-              <StyledCustomerInput type="number" value={orders.id} disabled />
+              <StyledCustomerInput type="number" value={order.id} disabled />
 
               <h5>Förnamn: </h5>
               <StyledCustomerInput
                 type="text"
-                value={orders.customer_firstname}
+                value={order.customer_firstname}
                 disabled
               />
               <h5>Efternamn: </h5>
               <StyledCustomerInput
                 type="text"
-                value={orders.customer_lastname}
+                value={order.customer_lastname}
                 disabled
               />
 
               <h5>Betald?</h5>
               <StyledCustomerInput
                 type="text"
-                value={orders.payment_status}
+                value={order.payment_status}
                 disabled
               />
               <h5> Totalt Pris:</h5>
               <StyledCustomerInput
                 type="text"
-                value={orders.total_price}
+                value={order.total_price}
                 disabled
               />
               <h5>Order status</h5>
               <StyledCustomerInput
-                type="options"
+                type="text"
                 value={
-                  isEditing ? editedOrder?.order_status : orders.order_status
+                  isEditing ? editedOrder?.order_status : order.order_status
                 }
                 disabled={!isEditing}
-                onChange={(e) => handleInputChange(e, "order_status")}
+                onChange={handleOrderStatusChange}
               />
 
               {!isEditing ? (
                 <StyledEditButton
                   onClick={() => {
-                    setEditingOrderId(orders.id);
-                    setEditedOrder({ ...orders });
+                    setEditingOrderId(order.id);
+                    setEditedOrder({ ...order });
                   }}
                 >
                   Redigera
                 </StyledEditButton>
               ) : (
-                <SaveProduct product={editedOrder!} onSave={onSaveOrder} />
+                <UpdateOrder order={editedOrder!} onSave={onSaveOrder} />
               )}
-              <DeleteOrder onDelete={onDeleteOrder} id={orders.id ?? 0} />
+              <DeleteOrder onDelete={onDeleteOrder} id={order.id ?? 0} />
             </CustomerCard>
           );
         })}

@@ -70,6 +70,6 @@ export const update = async <T>(url: string, body: T) => {
     return response;
   } catch (error) {
     console.error("Fetch error:", error);
-    return null;
+    throw error;
   }
 };

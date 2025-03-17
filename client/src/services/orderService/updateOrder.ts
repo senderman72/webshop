@@ -1,21 +1,21 @@
-import { CustomerUpdate, ICustomer } from "../../models/ICustomer";
+import { IOrder, OrderStatusUpdate } from "../../models/IOrder";
 import { update } from "../serviceBase";
 
-export const updateCustomer = async (
+export const updateOrder = async (
   id: number,
-  updatedCustomer: CustomerUpdate
-): Promise<ICustomer> => {
+  updatedOrder: OrderStatusUpdate
+): Promise<IOrder> => {
   try {
     const response = await update(
-      `http://localhost:3000/customers/${id}`,
-      updatedCustomer
+      `http://localhost:3000/orders/${id}`,
+      updatedOrder
     );
 
-    const data: ICustomer = await response.json();
-    console.log("Customer updated successfully:", data);
+    const data: IOrder = await response.json();
+    console.log("Order updated successfully:", data);
     return data;
   } catch (error) {
-    console.error("Error in updateCustomer:", error);
+    console.error("Error in updateOrder:", error);
     throw error;
   }
 };
