@@ -12,6 +12,8 @@ import { StyledEditButton } from "../../styled/styledAdmin/customerStyled/Update
 
 import DeleteOrder from "./DeleteOrder";
 import UpdateOrder from "./UpdateOrder";
+import { StyledLink } from "../../styled/styledProducts/ProductCards";
+import ShowOrderItems from "../ManageOrderItems/ShowOrderItems";
 
 const ShowOrders = () => {
   const { orders, setOrders } = useOrders();
@@ -101,6 +103,8 @@ const ShowOrders = () => {
                 <UpdateOrder order={editedOrder!} onSave={onSaveOrder} />
               )}
               <DeleteOrder onDelete={onDeleteOrder} id={order.id ?? 0} />
+
+              <StyledLink to={`${order.id}`}>mer info</StyledLink>
             </CustomerCard>
           );
         })}

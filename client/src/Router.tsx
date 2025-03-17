@@ -9,6 +9,7 @@ import AdminLayout from "./AdminLayout";
 import ShowCustomers from "./components/admin/ManageCustomers/ShowCustomers";
 import ShowOrders from "./components/admin/ManageOrders/ShowOrders";
 import ShowProducts from "./components/admin/manageProducts/ShowProducts";
+import ShowOrderItems from "./components/admin/ManageOrderItems/ShowOrderItems";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
           {
             path: "orders",
             element: <ShowOrders />,
+          },
+          {
+            path: "orders/:id",
+            element: <ShowOrderItems />,
           },
           {
             path: "products",
