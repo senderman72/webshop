@@ -1,5 +1,5 @@
 export interface IOrderItem {
-  id: number | null;
+  id: number;
   order_id: number;
   product_id: number;
   product_name: string;
