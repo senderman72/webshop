@@ -31,8 +31,19 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     setCart(newCart);
   };
 
+  const removeFromCart = (productId: number) => {
+    const index = cart.findIndex((item) => item.id === productId);
+    if (index !== -1) {
+      const newCart = [...cart];
+      newCart.splice(index, 1);
+      setCart(newCart);
+    }
+  };
+
   return (
-    <CartContext.Provider value={{ cart, cartCount, addToCart }}>
+    <CartContext.Provider
+      value={{ cart, cartCount, addToCart, removeFromCart }}
+    >
       {children}
     </CartContext.Provider>
   );

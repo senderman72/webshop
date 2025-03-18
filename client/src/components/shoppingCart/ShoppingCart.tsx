@@ -4,8 +4,10 @@ import {
   CartWrapper,
   CartItem,
   TotalPrice,
+  EmptyCartMessageWrapper,
 } from "../styled/styledCart/StyledCart";
 import { AddToCartBtn } from "../styled/styledProducts/ProductCards";
+import CartItemControls from "./CartItemControls";
 
 const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
   const cartContext = useContext(CartContext);
@@ -42,11 +44,18 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
             <img src={group.product.image} width={50} />
             <span>{group.product.name}</span>
             <span>{group.product.price * group.count} SEK</span>
+
             <span>Antal: {group.count}</span>
+            <CartItemControls
+              productId={group.product.id}
+              currentCount={group.count}
+            />
           </CartItem>
         ))
       ) : (
-        <p>Varukorgen är tom</p>
+        <EmptyCartMessageWrapper>
+          <p>Varukorgen är tom</p>
+        </EmptyCartMessageWrapper>
       )}
       <div>
         <TotalPrice>Totalpris: {totalPrice} SEK</TotalPrice>
