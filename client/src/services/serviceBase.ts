@@ -36,7 +36,7 @@ export const create = async <T>(url: string, body: T): Promise<T> => {
   }
 };
 
-export const remove = async (url: string): Promise<boolean> => {
+export const remove = async (url: string) => {
   try {
     const response = await fetch(url, {
       method: "DELETE",

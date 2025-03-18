@@ -5,6 +5,7 @@ export const CustomersWrapper = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
 `;
 
 export const CustomerList = styled.div`
@@ -13,6 +14,10 @@ export const CustomerList = styled.div`
   flex-direction: column-reverse;
   gap: 1rem;
   margin-bottom: 5rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 2rem;
+  }
 `;
 
 export const CustomerCard = styled.form`
@@ -26,6 +31,18 @@ export const CustomerCard = styled.form`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 
   gap: 0.5rem;
+
+  @media (max-width: 1024px) {
+    width: 80%;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    padding: 0.8rem;
+  }
 `;
 
 export const StyledCustomerInput = styled.input`
@@ -37,4 +54,9 @@ export const StyledCustomerInput = styled.input`
   font-size: 1rem;
   color: #333;
   cursor: not-allowed;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 0.4rem;
+  }
 `;

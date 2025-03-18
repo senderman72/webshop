@@ -16,6 +16,17 @@ export const AdminNavigationWrapper = styled.nav`
   left: 0;
   top: 0;
   bottom: 0;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    height: 12dvh;
+
+    margin-top: 4rem;
+    padding: 1rem;
+    gap: 1.5rem;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
 `;
 
 export const AdminNavigationList = styled.ul`
@@ -27,6 +38,12 @@ export const AdminNavigationList = styled.ul`
   gap: 3rem;
 
   list-style: none;
+
+  @media (max-width: 768px) {
+    flex-direction: row;
+    gap: 1.5rem;
+    width: auto;
+  }
 `;
 
 export const NavigationLink = styled(NavLink)`
@@ -36,9 +53,17 @@ export const NavigationLink = styled(NavLink)`
   .active {
     text-decoration: underline;
   }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 export const AdminH1 = styled.h1`
   font-size: 20px;
   color: white;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;

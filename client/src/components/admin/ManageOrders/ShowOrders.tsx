@@ -13,7 +13,6 @@ import { StyledEditButton } from "../../styled/styledAdmin/customerStyled/Update
 import DeleteOrder from "./DeleteOrder";
 import UpdateOrder from "./UpdateOrder";
 import { StyledLink } from "../../styled/styledProducts/ProductCards";
-import ShowOrderItems from "../ManageOrderItems/ShowOrderItems";
 
 const ShowOrders = () => {
   const { orders, setOrders } = useOrders();

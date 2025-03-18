@@ -13,6 +13,8 @@ import {
 import OrderItemQuantityUpdater from "./OrderQuantityUpdater";
 import { updateOrderItem } from "../../../services/orderItemsService/updateOrderItems";
 import { IOrderItem } from "../../../models/IOrderItem";
+import DeleteOrderItem from "./DeleteOrderItem";
+import { ManageOrderItemsContainer } from "../../styled/styledAdmin/orderdetails/ManageOrderItems";
 
 const ShowOrderItems = () => {
   const { id } = useParams<{ id: string }>();
@@ -63,6 +65,28 @@ const ShowOrderItems = () => {
     return item ? item.quantity : 1;
   };
 
+  const updatedTotalPrice = order.order_items.reduce((total, item) => {
+    const quantity = quantities[item.id] ?? item.quantity;
+    return total + quantity * item.unit_price;
+  }, 0);
+
+  const onDeleteOrder = (id: number) => {
+    setOrder((prev) => {
+      if (!prev) return prev;
+
+      const updatedItems = prev.order_items.filter((item) => item.id !== id);
+
+      return {
+        ...prev,
+        order_items: updatedItems,
+        total_price: updatedItems.reduce(
+          (total, item) => total + item.quantity * item.unit_price,
+          0
+        ),
+      };
+    });
+  };
+
   return (
     <OrderDetailsContainer>
       <Heading2>Order Details</Heading2>
@@ -85,15 +109,19 @@ const ShowOrderItems = () => {
                 item.unit_price}{" "}
               kr
             </ItemParagraph>
-            <OrderItemQuantityUpdater
-              quantity={quantities[item.id] ?? item.quantity}
-              onIncrement={() => handleIncrement(item.id)}
-              onDecrement={() => handleDecrement(item.id)}
-              onUpdateQuantity={() => handleUpdateQuantity(item)}
-            />
+            <ManageOrderItemsContainer>
+              <OrderItemQuantityUpdater
+                quantity={quantities[item.id] ?? item.quantity}
+                onIncrement={() => handleIncrement(item.id)}
+                onDecrement={() => handleDecrement(item.id)}
+                onUpdateQuantity={() => handleUpdateQuantity(item)}
+              />
+              <DeleteOrderItem id={item.id ?? 0} onDelete={onDeleteOrder} />
+            </ManageOrderItemsContainer>
           </OrderItem>
         ))}
       </OrderItemsList>
+      <ItemParagraph>totalt pris: {updatedTotalPrice} </ItemParagraph>
     </OrderDetailsContainer>
   );
 };

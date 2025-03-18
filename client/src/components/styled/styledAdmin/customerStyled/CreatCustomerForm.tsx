@@ -3,16 +3,21 @@ import styled from "styled-components";
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-
   justify-content: center;
+  align-items: center;
   gap: 12px;
-  max-width: 400px;
+  max-width: 70%;
   width: 100%;
   margin: 2rem auto;
   padding: 20px;
   background: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    margin-left: 4rem;
+  }
 `;
 
 export const Input = styled.input`
@@ -30,11 +35,20 @@ export const Input = styled.input`
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 8px;
+  }
 `;
 
 export const Inputbox = styled.div`
   width: 100%;
   display: flex;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
 `;
 
 export const Button = styled.button`

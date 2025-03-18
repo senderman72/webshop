@@ -6,6 +6,15 @@ export const QuantityContainer = styled.div`
   gap: 10px;
   justify-content: center;
   margin-top: 10px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 5px;
+  }
 `;
 
 export const QuantityButton = styled.button`
@@ -26,12 +35,21 @@ export const QuantityButton = styled.button`
     background-color: #a5a5a5;
     cursor: not-allowed;
   }
+
+  @media (max-width: 768px) {
+    padding: 4px 8px;
+    font-size: 14px;
+  }
 `;
 
 export const QuantityDisplay = styled.span`
   font-size: 18px;
   font-weight: bold;
   color: #003060;
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
 `;
 
 export const UpdateButton = styled.button`
@@ -45,5 +63,10 @@ export const UpdateButton = styled.button`
 
   &:hover {
     background-color: #0e86d4;
+  }
+
+  @media (max-width: 768px) {
+    padding: 6px 12px;
+    font-size: 14px;
   }
 `;

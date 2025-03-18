@@ -10,13 +10,9 @@ interface DeleteOrderProps {
 
 const DeleteOrder = ({ id, onDelete }: DeleteOrderProps) => {
   const handleDelete = async () => {
-    const success = await deleteOrder(id);
-    if (success) {
-      console.log("Produkten togs bort från databasen");
-      onDelete(id);
-    } else {
-      console.error("Misslyckades med att ta bort produkten");
-    }
+    await deleteOrder(id);
+
+    onDelete(id);
   };
   return <DeleteButton onClick={handleDelete}>Delete</DeleteButton>;
 };
