@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useOrder from "../../../hooks/useOrder";
 import { useParams } from "react-router";
 import {
@@ -10,14 +10,58 @@ import {
   OrderItemsList,
   Paragraph,
 } from "../../styled/styledAdmin/orderdetails/OrderDetails";
+import OrderItemQuantityUpdater from "./OrderQuantityUpdater";
+import { updateOrderItem } from "../../../services/orderItemsService/updateOrderItems";
+import { IOrderItem } from "../../../models/IOrderItem";
 
 const ShowOrderItems = () => {
   const { id } = useParams<{ id: string }>();
-  const { order } = useOrder(Number(id));
+  const { order, setOrder } = useOrder(Number(id));
+  const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
 
   if (!order) {
     return <div>Loading order details...</div>;
   }
+
+  const handleIncrement = (itemId: number) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [itemId]: (prev[itemId] || getInitialQuantity(itemId)) + 1,
+    }));
+  };
+
+  const handleDecrement = (itemId: number) => {
+    setQuantities((prev) => {
+      const currentQty = prev[itemId] ?? getInitialQuantity(itemId);
+      return {
+        ...prev,
+        [itemId]: currentQty > 1 ? currentQty - 1 : 1,
+      };
+    });
+  };
+
+  const handleUpdateQuantity = async (item: IOrderItem) => {
+    const newQuantity = quantities[item.id] ?? item.quantity;
+    const updatedItem: IOrderItem = { ...item, quantity: newQuantity };
+
+    try {
+      const updated = await updateOrderItem(item.id, updatedItem);
+
+      const updatedItems = order.order_items.map((i) =>
+        i.id === updated.id ? updated : i
+      );
+      setOrder({ ...order, order_items: updatedItems });
+
+      console.log("Quantity updated for item:", updated);
+    } catch (error) {
+      console.error("Failed to update quantity:", error);
+    }
+  };
+
+  const getInitialQuantity = (itemId: number) => {
+    const item = order.order_items.find((i) => i.id === itemId);
+    return item ? item.quantity : 1;
+  };
 
   return (
     <OrderDetailsContainer>
@@ -32,8 +76,21 @@ const ShowOrderItems = () => {
         {order.order_items.map((item) => (
           <OrderItem key={item.id}>
             <ItemParagraph>Product: {item.product_name}</ItemParagraph>
-            <ItemParagraph>Quantity: {item.quantity}</ItemParagraph>
-            <ItemParagraph>Price: {item.unit_price}</ItemParagraph>
+            <ItemParagraph>
+              Quantity: {quantities[item.id] ?? item.quantity}
+            </ItemParagraph>
+            <ItemParagraph>
+              {" "}
+              Price: {(quantities[item.id] ?? item.quantity) *
+                item.unit_price}{" "}
+              kr
+            </ItemParagraph>
+            <OrderItemQuantityUpdater
+              quantity={quantities[item.id] ?? item.quantity}
+              onIncrement={() => handleIncrement(item.id)}
+              onDecrement={() => handleDecrement(item.id)}
+              onUpdateQuantity={() => handleUpdateQuantity(item)}
+            />
           </OrderItem>
         ))}
       </OrderItemsList>
