@@ -8,6 +8,7 @@ import {
 } from "../styled/styledCart/StyledCart";
 import { AddToCartBtn } from "../styled/styledProducts/ProductCards";
 import CartItemControls from "./CartItemControls";
+import { getStripeCheckoutEmbeddedUrl } from "../../services/stripe/stripe-embedded";
 
 const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
   const cartContext = useContext(CartContext);
@@ -36,6 +37,10 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
     return total + group.product.price * group.count;
   }, 0);
 
+  const handleButtonClick = async () => {
+    const session = await getStripeCheckoutEmbeddedUrl();
+    window.location.href = session.url;
+  };
   return (
     <CartWrapper>
       {groupedCart.length > 0 ? (
@@ -60,7 +65,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
       <div>
         <TotalPrice>Totalpris: {totalPrice} SEK</TotalPrice>
       </div>
-      <AddToCartBtn>Checkout</AddToCartBtn>
+      <AddToCartBtn onClick={handleButtonClick}>Checkout</AddToCartBtn>
     </CartWrapper>
   );
 };

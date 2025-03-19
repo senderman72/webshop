@@ -74,13 +74,13 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
       "http://localhost:5173/order-confirmation?session_id={CHECKOUT_SESSION_ID}",
   });
 
-  res.json(session);
+  res.json({ sessionUrl: session.url, sessionId: session.id });
 
   // res.send({clientSecret: session.client_secret});
 });
 
 // När order är avklarad
-app.post("/stripe/webhook", (request, response) => {
+app.post("http://localhost:5173/stripe/webhook", (request, response) => {
   const event = request.body;
 
   // Handle the event
@@ -89,6 +89,7 @@ app.post("/stripe/webhook", (request, response) => {
       const checkoutSession = event.data.object;
       //update order with confirmed payment
       // -- payment_status = "Paid"
+
       // -- payment_id = "Paid"
       // -- order_status = "Shipped"
 
