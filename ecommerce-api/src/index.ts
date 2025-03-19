@@ -79,6 +79,34 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
   // res.send({clientSecret: session.client_secret});
 });
 
+// När order är avklarad
+app.post("/stripe/webhook", (request, response) => {
+  const event = request.body;
+
+  // Handle the event
+  switch (event.type) {
+    case "checkout.session.completed":
+      const checkoutSession = event.data.object;
+      //update order with confirmed payment
+      // -- payment_status = "Paid"
+      // -- payment_id = "Paid"
+      // -- order_status = "Shipped"
+
+      //update product with stock
+
+      // send confirmation email to customer
+
+      // send purchase to accounting service
+
+      console.log(checkoutSession);
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  // Return a response to acknowledge receipt of the event
+  response.json({ received: true });
+});
+
 // Attempt to connect to the database
 connectDB();
 // Start Express server
