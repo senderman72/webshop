@@ -8,7 +8,7 @@ import {
 } from "../styled/styledCart/StyledCart";
 import { AddToCartBtn } from "../styled/styledProducts/ProductCards";
 import CartItemControls from "./CartItemControls";
-import { getStripeCheckoutEmbeddedUrl } from "../../services/stripe/stripe-embedded";
+import { Link } from "react-router";
 
 const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
   const cartContext = useContext(CartContext);
@@ -21,26 +21,28 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
 
   if (!isOpen) return null;
 
-  const groupedCart = cart.reduce((acc, item) => {
-    const existingItem = acc.find((group) => group.product.id === item.id);
+  const handleCheckout = () => {
+    const groupedCart = cart.reduce((acc, item) => {
+      const existingItem = acc.find((group) => group.product.id === item.id);
 
-    if (existingItem) {
-      existingItem.count += 1;
-    } else {
-      acc.push({ product: item, count: 1 });
-    }
+      if (existingItem) {
+        existingItem.count += 1;
+      } else {
+        acc.push({ product: item, count: 1 });
+      }
 
-    return acc;
-  }, [] as { product: (typeof cart)[0]; count: number }[]);
+      return acc;
+    }, [] as { product: (typeof cart)[0]; count: number }[]);
 
-  const totalPrice = groupedCart.reduce((total, group) => {
-    return total + group.product.price * group.count;
-  }, 0);
+    const totalPrice = groupedCart.reduce((total, group) => {
+      return total + group.product.price * group.count;
+    }, 0);
 
-  const handleButtonClick = async () => {
-    const session = await getStripeCheckoutEmbeddedUrl();
-    window.location.href = session.url;
+    return { groupedCart, totalPrice };
   };
+
+  const { groupedCart, totalPrice } = handleCheckout();
+
   return (
     <CartWrapper>
       {groupedCart.length > 0 ? (
@@ -65,9 +67,11 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
       <div>
         <TotalPrice>Totalpris: {totalPrice} SEK</TotalPrice>
       </div>
-      <AddToCartBtn onClick={handleButtonClick}>Checkout</AddToCartBtn>
+
+      <Link to={"/checkout"}>
+        <AddToCartBtn>Gå till kassan</AddToCartBtn>
+      </Link>
     </CartWrapper>
   );
 };
-
 export default ShoppingCart;

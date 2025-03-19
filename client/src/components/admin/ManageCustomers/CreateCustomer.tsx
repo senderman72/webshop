@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useCustomer from "../../../hooks/useCustomer";
 import {
   Form,
@@ -13,20 +13,31 @@ interface CreateCustomerProps {
 }
 
 const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
-  const { addCustomer } = useCustomer();
+  const { addCustomer, customers } = useCustomer();
 
-  const [formData, setFormData] = useState({
-    id: 0,
-    firstname: "",
-    lastname: "",
-    email: "",
-    password: "",
-    phone: "",
-    street_address: "",
-    postal_code: "",
-    city: "",
-    country: "",
+  const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
+
+  const [formData, setFormData] = useState(() => {
+    const savedData = localStorage.getItem("createCustomerFormData");
+    return savedData
+      ? JSON.parse(savedData)
+      : {
+          id: 0,
+          firstname: "",
+          lastname: "",
+          email: "",
+          password: "",
+          phone: "",
+          street_address: "",
+          postal_code: "",
+          city: "",
+          country: "",
+        };
   });
+
+  useEffect(() => {
+    localStorage.setItem("createCustomerFormData", JSON.stringify(formData));
+  }, [formData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,25 +50,34 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const newCustomer = {
-      ...formData,
-    };
+    const existingCustomer = customers?.find(
+      (customer) => customer.email === formData.email
+    );
 
-    setFormData({
-      id: 0,
-      firstname: "",
-      lastname: "",
-      email: "",
-      password: "",
-      phone: "",
-      street_address: "",
-      postal_code: "",
-      city: "",
-      country: "",
-    });
+    if (existingCustomer) {
+      setEmailAlreadyExists(true);
+    } else {
+      const newCustomer = {
+        ...formData,
+      };
 
-    addCustomer(formData);
-    onAddCustomer(newCustomer);
+      setFormData({
+        id: 0,
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
+        phone: "",
+        street_address: "",
+        postal_code: "",
+        city: "",
+        country: "",
+      });
+
+      localStorage.removeItem("createCustomerFormData");
+      addCustomer(formData);
+      onAddCustomer(newCustomer);
+    }
   };
 
   return (
@@ -87,10 +107,10 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           onChange={handleChange}
         />
         <Input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
+          type="text"
+          name="country"
+          placeholder="Country"
+          value={formData.country}
           onChange={handleChange}
         />
       </Inputbox>
@@ -129,14 +149,9 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
         />
       </Inputbox>
 
-      <Input
-        type="text"
-        name="country"
-        placeholder="Country"
-        value={formData.country}
-        onChange={handleChange}
-      />
-      <AddToCartBtn type="submit">Create Customer</AddToCartBtn>
+      {emailAlreadyExists && <p>Email already exists</p>}
+
+      <AddToCartBtn type="submit">Skapa kund</AddToCartBtn>
     </Form>
   );
 };
