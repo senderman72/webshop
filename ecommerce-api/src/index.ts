@@ -42,7 +42,7 @@ app.post("/stripe/create-checkout-session-hosted", async (req, res) => {
       },
     ],
     mode: "payment",
-    success_url: "http://localhost:5173/success",
+    success_url: "http://localhost:5173/order-confirmation",
     cancel_url: "http://localhost:5173",
   });
 
