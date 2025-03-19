@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { CartContext } from "../../contexts/CartContext";
 import {
   CheckoutContainer,
-  CheckoutPageWrapper,
   Product,
   ProductDetails,
   ProductImage,
@@ -76,9 +75,20 @@ const CheckoutPage = () => {
       </Total>
       <h2>Ange adressinformation</h2>
       <CreateCustomer onAddCustomer={() => {}} />
-      <div>
-        <h2>Fortsätt till kassa</h2>
-        <UpdateButton>Checkout</UpdateButton>
+      <h2>Fortsätt till kassa</h2>
+
+      <UpdateButton
+        onClick={() => {
+          const checkoutContainer = document.getElementById("checkout");
+          if (checkoutContainer) {
+            checkoutContainer.style.display = "block";
+          }
+        }}
+      >
+        Checkout
+      </UpdateButton>
+      <div id="checkout" style={{ display: "none" }}>
+        <StripeEmbedded />
       </div>
     </CheckoutContainer>
   );

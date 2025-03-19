@@ -6,8 +6,6 @@ import {
 } from "@stripe/react-stripe-js";
 import { useCallback } from "react";
 
-import { getStripeCheckoutEmbeddedUrl } from "../../services/stripe/stripe-embedded";
-
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe(
@@ -15,16 +13,22 @@ const stripePromise = loadStripe(
 );
 
 const App = () => {
-  const fetchClientSecret = useCallback(async () => {
-    // Create a Checkout Session
-    const clientSecrete = await getStripeCheckoutEmbeddedUrl();
-    return clientSecrete;
+  const fetchClientSecret = useCallback(() => {
+    return fetch(
+      "http://localhost:3000/stripe/create-checkout-session-embedded",
+      {
+        method: "POST",
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => data.clientSecret);
   }, []);
 
   const options = { fetchClientSecret };
 
   return (
     <div id="checkout">
+      <h1>Checkout </h1>
       <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
         <EmbeddedCheckout />
       </EmbeddedCheckoutProvider>

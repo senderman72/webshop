@@ -27,31 +27,6 @@ app.use("/customers", customerRouter);
 app.use("/orders", orderRouter);
 app.use("/order-items", orderItemRouter);
 
-app.post("/stripe/create-checkout-session-hosted", async (req, res) => {
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "T-shirt",
-          },
-          unit_amount: 2000,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    success_url:
-      "http://localhost:5173/order-confirmation?session_id={CHECKOUT_SESSION_ID}",
-    cancel_url: "http://localhost:5173",
-  });
-
-  res.json({ checkout_url: session.url });
-
-  // res.redirect(303, session.url);
-});
-
 //Embedded
 
 app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
@@ -59,24 +34,27 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
     line_items: [
       {
         price_data: {
-          currency: "usd",
+          currency: "sek",
           product_data: {
             name: "T-shirt",
           },
           unit_amount: 2000,
         },
-        quantity: 1,
+        quantity: 2,
       },
     ],
     mode: "payment",
     ui_mode: "embedded",
     return_url:
       "http://localhost:5173/order-confirmation?session_id={CHECKOUT_SESSION_ID}",
+    client_reference_id: "1234",
   });
 
-  res.json({ sessionUrl: session.url, sessionId: session.id });
+  // res.json({ sessionUrl: session.url, sessionId: session.id });
 
-  // res.send({clientSecret: session.client_secret});
+  res.send({ clientSecret: session.client_secret });
+
+  // res.json(session);
 });
 
 // När order är avklarad
