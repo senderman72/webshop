@@ -46,9 +46,9 @@ app.post("/stripe/create-checkout-session-hosted", async (req, res) => {
     cancel_url: "http://localhost:5173/cancel",
   });
 
-  res.json(session);
+  res.json({ checkout_url: session.url });
 
-  res.redirect(303, session.url);
+  // res.redirect(303, session.url);
 });
 
 // Attempt to connect to the database
