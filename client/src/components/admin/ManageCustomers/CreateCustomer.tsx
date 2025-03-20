@@ -7,14 +7,19 @@ import {
   FormError,
 } from "../../styled/styledAdmin/customerStyled/CreatCustomerForm";
 import { AddToCartBtn } from "../../styled/styledProducts/ProductCards";
-import { CustomerCreate } from "../../../models/ICustomer";
+import { CustomerCreate, ICustomer } from "../../../models/ICustomer";
+import { getCustomerByEmail } from "../../../services/customerService/getCustomerByEmail";
 
 interface CreateCustomerProps {
-  onAddCustomer: (newCustomer: CustomerCreate) => void;
+  onAddCustomer: (newCustomer: ICustomer) => void;
+  onProceedToCheckout: (customer: ICustomer) => void;
 }
 
-const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
-  const { addCustomer, customers } = useCustomer();
+const CreateCustomer = ({
+  onAddCustomer,
+  onProceedToCheckout,
+}: CreateCustomerProps) => {
+  const { addCustomer } = useCustomer();
 
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -50,7 +55,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
     setEmailAlreadyExists(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (
@@ -67,36 +72,40 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
       return;
     }
 
-    const existingCustomer = customers?.find(
-      (customer) => customer.email === formData.email
-    );
+    try {
+      // Check if the customer already exists by email
+      const existingCustomer = await getCustomerByEmail(formData.email);
 
-    if (existingCustomer) {
-      onAddCustomer(existingCustomer);
-      setErrorMessage("");
-      return;
+      if (existingCustomer && existingCustomer.id) {
+        // If customer exists, proceed to checkout with the existing customer
+        onProceedToCheckout(existingCustomer);
+        return;
+      } else {
+        const newCustomer: ICustomer = { ...formData };
+
+        await addCustomer(newCustomer);
+
+        onProceedToCheckout(newCustomer);
+
+        setFormData({
+          id: 0,
+          firstname: "",
+          lastname: "",
+          email: "",
+          phone: "",
+          street_address: "",
+          postal_code: "",
+          city: "",
+          country: "",
+        });
+
+        localStorage.removeItem("createCustomerFormData");
+        setErrorMessage("");
+      }
+    } catch (error) {
+      setErrorMessage("Ett fel uppstod vid hämtning av kunddata.");
+      console.error("Error fetching or creating customer:", error);
     }
-
-    const newCustomer = { ...formData };
-
-    // Spara och rensa
-    addCustomer(newCustomer);
-    onAddCustomer(newCustomer);
-
-    setFormData({
-      id: 0,
-      firstname: "",
-      lastname: "",
-      email: "",
-      phone: "",
-      street_address: "",
-      postal_code: "",
-      city: "",
-      country: "",
-    });
-
-    localStorage.removeItem("createCustomerFormData");
-    setErrorMessage("");
   };
 
   return (
@@ -146,7 +155,6 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           onChange={handleChange}
           required
         />
-
         <Input
           type="text"
           name="street_address"
@@ -165,7 +173,6 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           onChange={handleChange}
           required
         />
-
         <Input
           type="text"
           name="city"
@@ -176,9 +183,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
         />
       </Inputbox>
       {errorMessage && <FormError>{errorMessage}</FormError>}
-      <AddToCartBtn type="submit" onClick={handleSubmit}>
-        Fortsätt till checkout
-      </AddToCartBtn>
+      <AddToCartBtn type="submit">Fortsätt till checkout</AddToCartBtn>
     </Form>
   );
 };

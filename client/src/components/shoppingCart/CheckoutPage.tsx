@@ -14,6 +14,10 @@ import CreateCustomer from "../admin/ManageCustomers/CreateCustomer";
 import StripeEmbedded from "../stripe-checkout/StripeEmbedded";
 
 import { StyledLink } from "../styled/styledProducts/ProductCards";
+import { getCustomerByEmail } from "../../services/customerService/getCustomerByEmail";
+import { ICustomer } from "../../models/ICustomer";
+import { createCustomer } from "../../services/customerService/createCustomer";
+import { placeOrder } from "../../services/orderService/placeOrder";
 
 const CheckoutPage = () => {
   const { cart } = useContext(CartContext);
@@ -43,6 +47,22 @@ const CheckoutPage = () => {
   };
 
   const { groupedCart, totalPrice } = handleCheckout();
+  const onProceedToCheckout = async (customer: ICustomer) => {
+    try {
+      const existingCustomer = await getCustomerByEmail(customer.email);
+      const customerId = existingCustomer
+        ? existingCustomer.id
+        : (await createCustomer(customer)).id;
+      await placeOrder(customerId, cart);
+      return (
+        <div id="checkout" style={{ display: "block" }}>
+          <StripeEmbedded customerId={customerId} />
+        </div>
+      );
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
 
   return (
     <CheckoutContainer>
@@ -70,10 +90,10 @@ const CheckoutPage = () => {
       </ProductList>
       <Total>
         <h3>Total: {totalPrice} SEK</h3>
-        <p></p>
       </Total>
       <h2>Ange adressinformation</h2>
       <CreateCustomer
+        onProceedToCheckout={onProceedToCheckout}
         onAddCustomer={() => {
           const checkoutContainer = document.getElementById("checkout");
           if (checkoutContainer) {

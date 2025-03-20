@@ -36,42 +36,31 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
     return res.status(400).send({ error: "Cart is empty." });
   }
 
-  const groupedCart: {
-    id: string;
-    quantity;
-    number;
-    price: number;
-    name: string;
-    image: string;
-    stock: number;
-  }[] = [];
+  const orderItems = cart.map((item) => ({
+    product_id: item.id,
+    product_name: item.name,
+    unit_price: item.price,
+    quantity: item.quantity,
+  }));
 
-  cart.forEach((item) => {
-    const existingItem = groupedCart.find((i) => i.id === item.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      groupedCart.push({ ...item, quantity: 1 });
-    }
-  });
-
-  console.log("Grouped cart:", groupedCart);
+  const groupedCart = orderItems;
+  console.log(groupedCart);
 
   const line_items = groupedCart.map((item) => ({
     price_data: {
       currency: "sek",
       product_data: {
-        name: item.name,
-        images: [item.image],
+        name: item.product_name,
+        images: [item.images],
       },
-      unit_amount: item.price * 100,
+      unit_amount: item.unit_price * 100,
       tax_behavior: "exclusive",
     },
-    quantity: (item as { quantity: number }).quantity,
+    quantity: item.quantity,
     adjustable_quantity: {
       enabled: true,
       minimum: 1,
-      maximum: item.stock,
+      maximum: 100,
     },
   }));
 
@@ -91,7 +80,6 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
     res.status(500).send({ error: "Failed to create session" });
   }
 });
-
 // När order är avklarad
 app.post("http://localhost:5173/stripe/webhook", (request, response) => {
   const event = request.body;

@@ -125,6 +125,8 @@ export const createOrder = async (req: Request, res: Response) => {
   const { customer_id, payment_status, payment_id, order_status }: IOrder =
     req.body;
 
+  console.log(req.body);
+
   try {
     const sql = `
       INSERT INTO orders (customer_id, total_price, payment_status, payment_id, order_status)

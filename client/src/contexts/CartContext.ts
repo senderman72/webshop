@@ -4,6 +4,7 @@ import { IProduct } from "../models/IProducts";
 interface CartContextType {
   cart: IProduct[];
   cartCount: number;
+
   addToCart: (product: IProduct) => void;
   removeFromCart: (productId: number) => void;
 }
