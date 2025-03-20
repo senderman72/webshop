@@ -71,7 +71,7 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
     adjustable_quantity: {
       enabled: true,
       minimum: 1,
-      maximum: item.stock || 10,
+      maximum: item.stock,
     },
   }));
 
