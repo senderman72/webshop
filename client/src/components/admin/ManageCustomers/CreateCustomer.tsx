@@ -4,6 +4,7 @@ import {
   Form,
   Input,
   Inputbox,
+  FormError,
 } from "../../styled/styledAdmin/customerStyled/CreatCustomerForm";
 import { AddToCartBtn } from "../../styled/styledProducts/ProductCards";
 import { CustomerCreate } from "../../../models/ICustomer";
@@ -16,6 +17,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
   const { addCustomer, customers } = useCustomer();
 
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [formData, setFormData] = useState(() => {
     const savedData = localStorage.getItem("createCustomerFormData");
@@ -26,7 +28,6 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           firstname: "",
           lastname: "",
           email: "",
-          password: "",
           phone: "",
           street_address: "",
           postal_code: "",
@@ -45,39 +46,57 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
       ...prevData,
       [name]: value,
     }));
+    setErrorMessage("");
+    setEmailAlreadyExists(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (
+      formData.firstname.trim() === "" ||
+      formData.lastname.trim() === "" ||
+      formData.email.trim() === "" ||
+      formData.phone.trim() === "" ||
+      formData.street_address.trim() === "" ||
+      formData.postal_code.trim() === "" ||
+      formData.city.trim() === "" ||
+      formData.country.trim() === ""
+    ) {
+      setErrorMessage("Alla fält måste fyllas i.");
+      return;
+    }
 
     const existingCustomer = customers?.find(
       (customer) => customer.email === formData.email
     );
 
     if (existingCustomer) {
-      setEmailAlreadyExists(true);
-    } else {
-      const newCustomer = {
-        ...formData,
-      };
-
-      setFormData({
-        id: 0,
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
-        phone: "",
-        street_address: "",
-        postal_code: "",
-        city: "",
-        country: "",
-      });
-
-      localStorage.removeItem("createCustomerFormData");
-      addCustomer(formData);
-      onAddCustomer(newCustomer);
+      onAddCustomer(existingCustomer);
+      setErrorMessage("");
+      return;
     }
+
+    const newCustomer = { ...formData };
+
+    // Spara och rensa
+    addCustomer(newCustomer);
+    onAddCustomer(newCustomer);
+
+    setFormData({
+      id: 0,
+      firstname: "",
+      lastname: "",
+      email: "",
+      phone: "",
+      street_address: "",
+      postal_code: "",
+      city: "",
+      country: "",
+    });
+
+    localStorage.removeItem("createCustomerFormData");
+    setErrorMessage("");
   };
 
   return (
@@ -89,6 +108,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           placeholder="First Name"
           value={formData.firstname}
           onChange={handleChange}
+          required
         />
         <Input
           type="text"
@@ -96,6 +116,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           placeholder="Last Name"
           value={formData.lastname}
           onChange={handleChange}
+          required
         />
       </Inputbox>
       <Inputbox>
@@ -105,6 +126,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
+          required
         />
         <Input
           type="text"
@@ -112,6 +134,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           placeholder="Country"
           value={formData.country}
           onChange={handleChange}
+          required
         />
       </Inputbox>
       <Inputbox>
@@ -121,6 +144,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           placeholder="Phone"
           value={formData.phone}
           onChange={handleChange}
+          required
         />
 
         <Input
@@ -129,6 +153,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           placeholder="Street Address"
           value={formData.street_address}
           onChange={handleChange}
+          required
         />
       </Inputbox>
       <Inputbox>
@@ -138,6 +163,7 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           placeholder="Postal Code"
           value={formData.postal_code}
           onChange={handleChange}
+          required
         />
 
         <Input
@@ -146,12 +172,13 @@ const CreateCustomer = ({ onAddCustomer }: CreateCustomerProps) => {
           placeholder="City"
           value={formData.city}
           onChange={handleChange}
+          required
         />
       </Inputbox>
-
-      {emailAlreadyExists && <p>Email already exists</p>}
-
-      <AddToCartBtn type="submit">Skapa kund</AddToCartBtn>
+      {errorMessage && <FormError>{errorMessage}</FormError>}
+      <AddToCartBtn type="submit" onClick={handleSubmit}>
+        Fortsätt till checkout
+      </AddToCartBtn>
     </Form>
   );
 };

@@ -5,6 +5,7 @@ import {
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
 import { useCallback } from "react";
+import { CartContext } from "../../contexts/CartContext";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -12,17 +13,20 @@ const stripePromise = loadStripe(
   "pk_test_51R4GrvRC90WGM6PJ2QrF7lutVEGGtMmqwefR5r1XY0hSFXc5i97MWbeYSMKVuirBU9Lt2if1r5KR16kyQkNw101u00OwJuLr1B"
 );
 
-const App = () => {
+const StripeEmbedded = () => {
+  const { cart } = React.useContext(CartContext);
   const fetchClientSecret = useCallback(() => {
     return fetch(
       "http://localhost:3000/stripe/create-checkout-session-embedded",
       {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cart }),
       }
     )
       .then((res) => res.json())
       .then((data) => data.clientSecret);
-  }, []);
+  }, [cart]);
 
   const options = { fetchClientSecret };
 
@@ -36,4 +40,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default StripeEmbedded;

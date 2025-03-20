@@ -65,3 +65,9 @@ export const Button = styled.button`
     background: #0056b3;
   }
 `;
+
+export const FormError = styled.p`
+  color: red;
+  font-size: 14px;
+  margin: 10px 0;
+`;

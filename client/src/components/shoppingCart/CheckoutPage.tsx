@@ -12,9 +12,8 @@ import {
 import CartItemControls from "./CartItemControls";
 import CreateCustomer from "../admin/ManageCustomers/CreateCustomer";
 import StripeEmbedded from "../stripe-checkout/StripeEmbedded";
-import { UpdateButton } from "../styled/styledAdmin/orderdetails/QuantityStyled";
-import { Link } from "react-router";
-import { DeleteButton } from "../styled/styledAdmin/customerStyled/DeleteCustomerStyles";
+
+import { StyledLink } from "../styled/styledProducts/ProductCards";
 
 const CheckoutPage = () => {
   const { cart } = useContext(CartContext);
@@ -48,9 +47,9 @@ const CheckoutPage = () => {
   return (
     <CheckoutContainer>
       <h2>Kassa</h2>
-      <DeleteButton>
-        <Link to="/products">Tillbaka</Link>
-      </DeleteButton>
+
+      <StyledLink to="/products">Tillbaka</StyledLink>
+
       <ProductList>
         {groupedCart.map((group) => (
           <Product key={group.product.id}>
@@ -74,19 +73,15 @@ const CheckoutPage = () => {
         <p></p>
       </Total>
       <h2>Ange adressinformation</h2>
-      <CreateCustomer onAddCustomer={() => {}} />
-      <h2>Fortsätt till kassa</h2>
-
-      <UpdateButton
-        onClick={() => {
+      <CreateCustomer
+        onAddCustomer={() => {
           const checkoutContainer = document.getElementById("checkout");
           if (checkoutContainer) {
             checkoutContainer.style.display = "block";
           }
         }}
-      >
-        Checkout
-      </UpdateButton>
+      />
+
       <div id="checkout" style={{ display: "none" }}>
         <StripeEmbedded />
       </div>
