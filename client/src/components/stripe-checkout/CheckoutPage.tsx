@@ -20,15 +20,25 @@ import { createCustomer } from "../../services/customerService/createCustomer";
 import ProceedToCheckout from "./ProceedToCheckout";
 
 const CheckoutPage = () => {
-  const { cart } = useContext(CartContext);
+  const cartContext = useContext(CartContext);
+  const cart = cartContext?.cart;
   const [customerId, setCustomerId] = useState(null);
 
-  if (cart.length === 0) {
+  useEffect(() => {
+    if (customerId) {
+      const checkoutContainer = document.getElementById("checkout");
+      if (checkoutContainer) {
+        checkoutContainer.style.display = "block";
+      }
+    }
+  }, [customerId]);
+
+  if (cart?.length === 0) {
     return <div>Varukorgen är tom</div>;
   }
 
   const handleCheckout = () => {
-    const groupedCart = cart.reduce((acc, item) => {
+    const groupedCart = cart?.reduce((acc, item) => {
       const existingItem = acc.find((group) => group.product.id === item.id);
 
       if (existingItem) {
@@ -40,7 +50,7 @@ const CheckoutPage = () => {
       return acc;
     }, [] as { product: (typeof cart)[0]; count: number }[]);
 
-    const totalPrice = groupedCart.reduce((total, group) => {
+    const totalPrice = groupedCart?.reduce((total, group) => {
       return total + group.product.price * group.count;
     }, 0);
     console.log(groupedCart);
@@ -61,15 +71,6 @@ const CheckoutPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (customerId) {
-      const checkoutContainer = document.getElementById("checkout");
-      if (checkoutContainer) {
-        checkoutContainer.style.display = "block";
-      }
-    }
-  }, [customerId]);
-
   return (
     <CheckoutContainer>
       <h2>Kassa</h2>
@@ -77,7 +78,7 @@ const CheckoutPage = () => {
       <StyledLink to="/products">Tillbaka</StyledLink>
 
       <ProductList>
-        {groupedCart.map((group) => (
+        {groupedCart?.map((group) => (
           <Product key={group.product.id}>
             <ProductImage>
               <img src={group.product.image} alt={group.product.name} />

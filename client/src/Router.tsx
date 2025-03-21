@@ -35,7 +35,7 @@ export const router = createBrowserRouter([
         element: <CheckoutPage />,
       },
       {
-        path: "/order-confirmation?session_id={CHECKOUT_SESSION_ID}",
+        path: "/order-confirmation/:session_id",
         element: <ConfirmationPage />,
       },
       {

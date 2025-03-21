@@ -22,6 +22,7 @@ import productRouter from "./routes/products";
 import customerRouter from "./routes/customers";
 import orderRouter from "./routes/orders";
 import orderItemRouter from "./routes/orderItems";
+
 app.use("/products", productRouter);
 app.use("/customers", customerRouter);
 app.use("/orders", orderRouter);
@@ -42,6 +43,7 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
         currency: "sek",
         product_data: {
           name: item.product.name,
+          images: [item.product.image],
         },
         unit_amount: item.product.price * 100,
       },
@@ -60,33 +62,34 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
     mode: "payment",
     ui_mode: "embedded",
     return_url:
-      "https://example.com/checkout/return?session_id={CHECKOUT_SESSION_ID}",
+      "http://localhost:5173/order-confirmation/{CHECKOUT_SESSION_ID}",
     client_reference_id: customerId,
   });
 
   res.send({ clientSecret: session.client_secret });
 });
+
+app.get("/session_status", async (req, res) => {
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+
+  res.send({
+    status: session.status,
+    payment_status: session.payment_status,
+    customer_email: session.customer_details.email,
+  });
+});
+
 // När order är avklarad
 app.post("http://localhost:5173/stripe/webhook", (request, response) => {
   const event = request.body;
 
   // Handle the event
   switch (event.type) {
-    case "checkout.session.completed":
-      const checkoutSession = event.data.object;
-      //update order with confirmed payment
-      // -- payment_status = "Paid"
-
-      // -- payment_id = "Paid"
-      // -- order_status = "Shipped"
-
-      //update product with stock
-
-      // send confirmation email to customer
-
-      // send purchase to accounting service
-
-      console.log(checkoutSession);
+    case "payment_intent.succeeded":
+      const paymentIntent = event.data.object;
+      updateOrderStatus(paymentIntent);
+      break;
+    // ... handle other event types
     default:
       console.log(`Unhandled event type ${event.type}`);
   }

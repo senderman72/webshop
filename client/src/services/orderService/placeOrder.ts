@@ -1,14 +1,21 @@
 import { IOrder } from "../../models/IOrder";
+import { IOrderItem } from "../../models/IOrderItem";
 
 export const placeOrder = async (
-  customerId: number
+  customerId: number,
+  cart: IOrderItem[]
 ): Promise<IOrder | false> => {
   try {
     const orderData = {
       customer_id: customerId,
-      payment_status: "unpaid",
-      payment_id: null,
+      payment_status: "paid",
+      payment_id: "",
       order_status: "pending",
+      order_items: cart.map((item) => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+        price: item.unit_price,
+      })),
     };
 
     const response = await fetch("http://localhost:3000/orders", {
