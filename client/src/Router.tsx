@@ -10,7 +10,7 @@ import ShowCustomers from "./components/admin/ManageCustomers/ShowCustomers";
 import ShowOrders from "./components/admin/ManageOrders/ShowOrders";
 import ShowProducts from "./components/admin/manageProducts/ShowProducts";
 import ShowOrderItems from "./components/admin/ManageOrderItems/ShowOrderItems";
-import CheckoutPage from "./components/shoppingCart/CheckoutPage";
+import CheckoutPage from "./components/stripe-checkout/CheckoutPage";
 import ConfirmationPage from "./components/stripe-checkout/ConfirmationPage";
 
 export const router = createBrowserRouter([

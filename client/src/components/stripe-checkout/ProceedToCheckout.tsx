@@ -1,30 +1,45 @@
-import React, { useState } from "react";
-import useCustomer from "../../../hooks/useCustomer";
+import React, { useState, useEffect } from "react";
+import { Form } from "react-router";
+import useCustomer from "../../hooks/useCustomer";
+import { ICustomer } from "../../models/ICustomer";
+import { getCustomerByEmail } from "../../services/customerService/getCustomerByEmail";
 import {
-  Form,
-  Input,
   Inputbox,
+  Input,
   FormError,
-} from "../../styled/styledAdmin/customerStyled/CreatCustomerForm";
-import { AddToCartBtn } from "../../styled/styledProducts/ProductCards";
-import { ICustomer } from "../../../models/ICustomer";
+} from "../styled/styledAdmin/customerStyled/CreatCustomerForm";
+import { AddToCartBtn } from "../styled/styledProducts/ProductCards";
 
-const CreateCustomer = () => {
+interface CreateCustomerProps {
+  onProceedToCheckout: (customer: ICustomer) => void;
+}
+
+const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
   const { addCustomer } = useCustomer();
 
-  const [formData, setFormData] = useState({
-    id: 0,
-    firstname: "",
-    lastname: "",
-    email: "",
-    phone: "",
-    street_address: "",
-    postal_code: "",
-    city: "",
-    country: "",
+  const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [formData, setFormData] = useState(() => {
+    const savedData = localStorage.getItem("createCustomerFormData");
+    return savedData
+      ? JSON.parse(savedData)
+      : {
+          id: 0,
+          firstname: "",
+          lastname: "",
+          email: "",
+          phone: "",
+          street_address: "",
+          postal_code: "",
+          city: "",
+          country: "",
+        };
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    localStorage.setItem("createCustomerFormData", JSON.stringify(formData));
+  }, [formData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,6 +48,7 @@ const CreateCustomer = () => {
       [name]: value,
     }));
     setErrorMessage("");
+    setEmailAlreadyExists(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,26 +69,36 @@ const CreateCustomer = () => {
     }
 
     try {
-      const newCustomer: ICustomer = { ...formData };
+      const existingCustomer = await getCustomerByEmail(formData.email);
 
-      await addCustomer(newCustomer);
+      if (existingCustomer && existingCustomer.id) {
+        onProceedToCheckout(existingCustomer);
+        return;
+      } else {
+        const newCustomer: ICustomer = { ...formData };
 
-      setFormData({
-        id: 0,
-        firstname: "",
-        lastname: "",
-        email: "",
-        phone: "",
-        street_address: "",
-        postal_code: "",
-        city: "",
-        country: "",
-      });
+        await addCustomer(newCustomer);
 
-      setErrorMessage("");
+        onProceedToCheckout(newCustomer);
+
+        setFormData({
+          id: 0,
+          firstname: "",
+          lastname: "",
+          email: "",
+          phone: "",
+          street_address: "",
+          postal_code: "",
+          city: "",
+          country: "",
+        });
+
+        localStorage.removeItem("createCustomerFormData");
+        setErrorMessage("");
+      }
     } catch (error) {
-      setErrorMessage("Ett fel uppstod vid skapande av kund.");
-      console.error("Error creating customer:", error);
+      setErrorMessage("Ett fel uppstod vid hämtning av kunddata.");
+      console.error("Error fetching or creating customer:", error);
     }
   };
 
@@ -151,9 +177,9 @@ const CreateCustomer = () => {
         />
       </Inputbox>
       {errorMessage && <FormError>{errorMessage}</FormError>}
-      <AddToCartBtn type="submit">Lägg till kund</AddToCartBtn>
+      <AddToCartBtn type="submit">Fortsätt till checkout</AddToCartBtn>
     </Form>
   );
 };
 
-export default CreateCustomer;
+export default ProceedToCheckout;

@@ -9,14 +9,15 @@ import {
   Total,
 } from "../styled/styledCheckout/CheckoutPageWrapper";
 
-import CartItemControls from "./CartItemControls";
-import CreateCustomer from "../admin/ManageCustomers/CreateCustomer";
-import StripeEmbedded from "../stripe-checkout/StripeEmbedded";
+import CartItemControls from "../shoppingCart/CartItemControls";
+
+import StripeEmbedded from "./StripeEmbedded";
 
 import { StyledLink } from "../styled/styledProducts/ProductCards";
 import { getCustomerByEmail } from "../../services/customerService/getCustomerByEmail";
 import { ICustomer } from "../../models/ICustomer";
 import { createCustomer } from "../../services/customerService/createCustomer";
+import ProceedToCheckout from "./ProceedToCheckout";
 
 const CheckoutPage = () => {
   const { cart } = useContext(CartContext);
@@ -97,7 +98,7 @@ const CheckoutPage = () => {
         <h3>Total: {totalPrice} SEK</h3>
       </Total>
       <h2>Ange adressinformation</h2>
-      <CreateCustomer onProceedToCheckout={onProceedToCheckout} />
+      <ProceedToCheckout onProceedToCheckout={onProceedToCheckout} />
 
       <div id="checkout" style={{ display: "none" }}>
         {customerId && (
