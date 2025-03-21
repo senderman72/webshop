@@ -17,7 +17,6 @@ interface CreateCustomerProps {
 const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
   const { addCustomer } = useCustomer();
 
-  const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [formData, setFormData] = useState(() => {
@@ -48,7 +47,6 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
       [name]: value,
     }));
     setErrorMessage("");
-    setEmailAlreadyExists(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
