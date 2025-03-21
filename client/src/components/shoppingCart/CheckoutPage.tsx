@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { CartContext } from "../../contexts/CartContext";
 import {
   CheckoutContainer,
@@ -17,10 +17,10 @@ import { StyledLink } from "../styled/styledProducts/ProductCards";
 import { getCustomerByEmail } from "../../services/customerService/getCustomerByEmail";
 import { ICustomer } from "../../models/ICustomer";
 import { createCustomer } from "../../services/customerService/createCustomer";
-import { placeOrder } from "../../services/orderService/placeOrder";
 
 const CheckoutPage = () => {
   const { cart } = useContext(CartContext);
+  const [customerId, setCustomerId] = useState(null);
 
   if (cart.length === 0) {
     return <div>Varukorgen är tom</div>;
@@ -42,27 +42,32 @@ const CheckoutPage = () => {
     const totalPrice = groupedCart.reduce((total, group) => {
       return total + group.product.price * group.count;
     }, 0);
-
+    console.log(groupedCart);
     return { groupedCart, totalPrice };
   };
 
   const { groupedCart, totalPrice } = handleCheckout();
+
   const onProceedToCheckout = async (customer: ICustomer) => {
     try {
       const existingCustomer = await getCustomerByEmail(customer.email);
-      const customerId = existingCustomer
+      const newCustomerId = existingCustomer
         ? existingCustomer.id
         : (await createCustomer(customer)).id;
-      await placeOrder(customerId, cart);
-      return (
-        <div id="checkout" style={{ display: "block" }}>
-          <StripeEmbedded customerId={customerId} />
-        </div>
-      );
+      setCustomerId(newCustomerId);
     } catch (error) {
       console.error("Error during checkout:", error);
     }
   };
+
+  useEffect(() => {
+    if (customerId) {
+      const checkoutContainer = document.getElementById("checkout");
+      if (checkoutContainer) {
+        checkoutContainer.style.display = "block";
+      }
+    }
+  }, [customerId]);
 
   return (
     <CheckoutContainer>
@@ -92,18 +97,12 @@ const CheckoutPage = () => {
         <h3>Total: {totalPrice} SEK</h3>
       </Total>
       <h2>Ange adressinformation</h2>
-      <CreateCustomer
-        onProceedToCheckout={onProceedToCheckout}
-        onAddCustomer={() => {
-          const checkoutContainer = document.getElementById("checkout");
-          if (checkoutContainer) {
-            checkoutContainer.style.display = "block";
-          }
-        }}
-      />
+      <CreateCustomer onProceedToCheckout={onProceedToCheckout} />
 
       <div id="checkout" style={{ display: "none" }}>
-        <StripeEmbedded />
+        {customerId && (
+          <StripeEmbedded cart={groupedCart} customerId={customerId} />
+        )}
       </div>
     </CheckoutContainer>
   );

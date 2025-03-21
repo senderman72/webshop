@@ -7,18 +7,14 @@ import {
   FormError,
 } from "../../styled/styledAdmin/customerStyled/CreatCustomerForm";
 import { AddToCartBtn } from "../../styled/styledProducts/ProductCards";
-import { CustomerCreate, ICustomer } from "../../../models/ICustomer";
+import { ICustomer } from "../../../models/ICustomer";
 import { getCustomerByEmail } from "../../../services/customerService/getCustomerByEmail";
 
 interface CreateCustomerProps {
-  onAddCustomer: (newCustomer: ICustomer) => void;
   onProceedToCheckout: (customer: ICustomer) => void;
 }
 
-const CreateCustomer = ({
-  onAddCustomer,
-  onProceedToCheckout,
-}: CreateCustomerProps) => {
+const CreateCustomer = ({ onProceedToCheckout }: CreateCustomerProps) => {
   const { addCustomer } = useCustomer();
 
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
@@ -73,11 +69,9 @@ const CreateCustomer = ({
     }
 
     try {
-      // Check if the customer already exists by email
       const existingCustomer = await getCustomerByEmail(formData.email);
 
       if (existingCustomer && existingCustomer.id) {
-        // If customer exists, proceed to checkout with the existing customer
         onProceedToCheckout(existingCustomer);
         return;
       } else {

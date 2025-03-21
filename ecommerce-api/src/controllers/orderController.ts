@@ -133,17 +133,7 @@ export const createOrder = async (req: Request, res: Response) => {
       VALUES (?, ?, ?, ?, ?)
     `;
 
-    const totalPrice = req.body.order_items.reduce(
-      (total, item) => total + item.quantity * item.unit_price,
-      0
-    );
-    const params = [
-      customer_id,
-      totalPrice,
-      payment_status,
-      payment_id,
-      order_status,
-    ];
+    const params = [customer_id, payment_status, payment_id, order_status];
     const [result] = await db.query<ResultSetHeader>(sql, params);
     if (result.insertId) {
       const order_id: number = result.insertId;

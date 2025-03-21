@@ -30,55 +30,41 @@ app.use("/order-items", orderItemRouter);
 //Embedded
 
 app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
-  const { cart } = req.body;
+  const { cart, customerId } = req.body;
 
-  if (!cart || cart.length === 0) {
-    return res.status(400).send({ error: "Cart is empty." });
-  }
+  console.log("Begäran inkommen:");
+  console.log("cart:", cart);
+  console.log("customId:", customerId);
 
-  const orderItems = cart.map((item) => ({
-    product_id: item.id,
-    product_name: item.name,
-    unit_price: item.price,
-    quantity: item.quantity,
-  }));
-
-  const groupedCart = orderItems;
-  console.log(groupedCart);
-
-  const line_items = groupedCart.map((item) => ({
-    price_data: {
-      currency: "sek",
-      product_data: {
-        name: item.product_name,
-        images: [item.images],
+  const lineItems = cart.map((item) => {
+    return {
+      price_data: {
+        currency: "sek",
+        product_data: {
+          name: item.product.name,
+        },
+        unit_amount: item.product.price * 100,
       },
-      unit_amount: item.unit_price * 100,
-      tax_behavior: "exclusive",
-    },
-    quantity: item.quantity,
-    adjustable_quantity: {
-      enabled: true,
-      minimum: 1,
-      maximum: 100,
-    },
-  }));
+      adjustable_quantity: {
+        enabled: true,
+        minimum: 1,
+        maximum: 10,
+      },
 
-  try {
-    const session = await stripe.checkout.sessions.create({
-      line_items,
-      mode: "payment",
-      ui_mode: "embedded",
-      return_url:
-        "http://localhost:5173/order-confirmation?session_id={CHECKOUT_SESSION_ID}",
-      client_reference_id: "1234",
-    });
+      quantity: item.count,
+    };
+  });
 
-    res.send({ clientSecret: session.client_secret });
-  } catch (err) {
-    console.error("Stripe error:", err);
-    res.status(500).send({ error: "Failed to create session" });
-  }
+  const session = await stripe.checkout.sessions.create({
+    line_items: lineItems,
+    mode: "payment",
+    ui_mode: "embedded",
+    return_url:
+      "https://example.com/checkout/return?session_id={CHECKOUT_SESSION_ID}",
+    client_reference_id: customerId,
+  });
+
+  res.send({ clientSecret: session.client_secret });
 });
 // När order är avklarad
 app.post("http://localhost:5173/stripe/webhook", (request, response) => {

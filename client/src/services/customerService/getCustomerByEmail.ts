@@ -4,13 +4,13 @@ export const getCustomerByEmail = async (email: string) => {
       `http://localhost:3000/customers/email/${email}`
     );
     if (!response.ok) {
-      throw new Error("Kunde inte hitta kunden.");
+      return null;
     }
     const customer = await response.json();
 
     return customer;
   } catch (error) {
     console.error("Error fetching customer:", error);
-    throw error;
+    return null;
   }
 };
