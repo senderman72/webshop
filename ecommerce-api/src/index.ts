@@ -33,10 +33,6 @@ app.use("/order-items", orderItemRouter);
 app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
   const { cart, customerId } = req.body;
 
-  console.log("Begäran inkommen:");
-  console.log("cart:", cart);
-  console.log("customId:", customerId);
-
   const lineItems = cart.map((item) => {
     return {
       price_data: {

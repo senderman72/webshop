@@ -122,8 +122,15 @@ const formatOrderDetails = (rows) => ({
 });
 
 export const createOrder = async (req: Request, res: Response) => {
-  const { customer_id, payment_status, payment_id, order_status }: IOrder =
-    req.body;
+  const {
+    customer_id,
+    payment_status,
+    payment_id,
+    order_status,
+    total_price,
+  }: IOrder = req.body;
+
+  console.log(req.body);
 
   try {
     const sql = `
@@ -131,7 +138,14 @@ export const createOrder = async (req: Request, res: Response) => {
       VALUES (?, ?, ?, ?, ?)
     `;
 
-    const params = [customer_id, payment_status, payment_id, order_status];
+    const params = [
+      customer_id,
+      total_price,
+
+      payment_status,
+      payment_id,
+      order_status,
+    ];
     const [result] = await db.query<ResultSetHeader>(sql, params);
     if (result.insertId) {
       const order_id: number = result.insertId;

@@ -1,40 +1,35 @@
-import { IOrder } from "../../models/IOrder";
 import { IOrderItem } from "../../models/IOrderItem";
+import { create } from "../serviceBase";
 
 export const placeOrder = async (
   customerId: number,
   cart: IOrderItem[]
-): Promise<IOrder | false> => {
+): Promise<{ message: string; order_id: number }> => {
   try {
-    const orderData = {
+    const totalPrice = cart.reduce(
+      (acc, item) => acc + item.quantity * item.unit_price,
+      0
+    );
+
+    const order = {
       customer_id: customerId,
-      payment_status: "paid",
-      payment_id: "",
+      payment_status: "unpaid",
+      total_price: totalPrice,
+      payment_id: null,
       order_status: "pending",
       order_items: cart.map((item) => ({
         product_id: item.product_id,
+        product_name: item.product_name,
         quantity: item.quantity,
-        price: item.unit_price,
+        unit_price: item.unit_price,
       })),
     };
 
-    const response = await fetch("http://localhost:3000/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderData),
-    });
+    const response = await create("http://localhost:3000/orders", order);
 
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      console.error("Error during order creation:", errorResponse.message);
-      return false;
-    }
-
-    const order: IOrder = await response.json();
-    console.log("Order created:", order);
-    return order;
+    return response;
   } catch (error) {
     console.error("Error during order creation:", error);
-    return false;
+    throw error;
   }
 };
