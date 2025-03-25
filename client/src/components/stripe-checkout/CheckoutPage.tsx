@@ -20,71 +20,48 @@ import { placeOrder } from "../../services/orderService/placeOrder";
 import { ICustomer } from "../../models/ICustomer";
 
 const CheckoutPage = () => {
-  const cartContext = useContext(CartContext);
-  const cart = cartContext?.cart;
-  const [customer, setCustomer] = useState<ICustomer | null>(null);
+  const { cart } = useContext(CartContext) ?? { cart: [] };
+  const [customerData, setCustomerData] = useState<ICustomer | null>(null);
   const [orderId, setOrderId] = useState<number | null>(null);
 
   useEffect(() => {
     if (orderId) {
-      const checkoutContainer = document.getElementById("checkout");
-      if (checkoutContainer) {
-        checkoutContainer.style.display = "block";
-      }
+      document
+        .getElementById("checkout")
+        ?.style.setProperty("display", "block");
     }
   }, [orderId]);
 
-  if (cart?.length === 0) {
-    return <div>Varukorgen är tom</div>;
-  }
+  if (!cart.length) return <div>Varukorgen är tom</div>;
 
-  const handleCheckout = () => {
-    const groupedCart = cart?.reduce((acc, item) => {
-      const existingItem = acc.find((group) => group.product.id === item.id);
+  const groupedCart = cart.reduce((acc, item) => {
+    const group = acc.get(item.id) || { product: item, count: 0 };
+    group.count += 1;
+    acc.set(item.id, group);
+    return acc;
+  }, new Map<number, { product: (typeof cart)[number]; count: number }>());
 
-      if (existingItem) {
-        existingItem.count += 1;
-      } else {
-        acc.push({ product: item, count: 1 });
-      }
-
-      return acc;
-    }, [] as { product: (typeof cart)[0]; count: number }[]);
-
-    const totalPrice = groupedCart?.reduce((total, group) => {
-      return total + group.product.price * group.count;
-    }, 0);
-
-    return { groupedCart, totalPrice };
-  };
-
-  const { groupedCart, totalPrice } = handleCheckout();
+  const totalPrice = Array.from(groupedCart.values()).reduce(
+    (total, { product, count }) => total + product.price * count,
+    0
+  );
 
   const onProceedToCheckout = async (customerData: ICustomer) => {
-    if (!customerData || !customerData.id) {
-      console.error("Customer is undefined or missing ID", customerData);
-      return;
-    }
-
-    setCustomer(customerData);
+    setCustomerData(customerData);
 
     try {
-      const orderItems =
-        groupedCart?.map((item) => ({
-          product_id: item.product.id,
-          product_name: item.product.name,
-          quantity: item.count,
-          unit_price: item.product.price,
-        })) ?? [];
+      const orderItems = Array.from(groupedCart.values()).map(
+        ({ product, count }) => ({
+          product_id: product.id,
+          product_name: product.name,
+          quantity: count,
+          unit_price: product.price,
+        })
+      );
 
       const orderResponse = await placeOrder(customerData.id, orderItems);
-
-      if (orderResponse && orderResponse.order_id) {
-        setOrderId(orderResponse.order_id);
-        console.log("Order created with ID:", orderResponse.order_id);
-      } else {
-        throw new Error(`${orderId}missing in response.`);
-      }
+      if (orderResponse?.order_id) setOrderId(orderResponse.order_id);
+      else throw new Error("Missing order ID in response");
     } catch (error) {
       console.error("Error during checkout:", error);
     }
@@ -93,24 +70,19 @@ const CheckoutPage = () => {
   return (
     <CheckoutContainer>
       <h2>Kassa</h2>
-
       <StyledLink to="/products">Tillbaka</StyledLink>
-
       <ProductList>
-        {groupedCart?.map((group) => (
-          <Product key={group.product.id}>
+        {Array.from(groupedCart.values()).map(({ product, count }) => (
+          <Product key={product.id}>
             <ProductImage>
-              <img src={group.product.image} alt={group.product.name} />
+              <img src={product.image} alt={product.name} />
             </ProductImage>
             <ProductDetails>
-              <h3>{group.product.name}</h3>
-              <p>Price: {group.product.price * group.count} SEK</p>
-              <p>Quantity: {group.count}</p>
+              <h3>{product.name}</h3>
+              <p>Price: {product.price * count} SEK</p>
+              <p>Quantity: {count}</p>
             </ProductDetails>
-            <CartItemControls
-              productId={group.product.id}
-              currentCount={group.count}
-            />
+            <CartItemControls productId={product.id} currentCount={count} />
           </Product>
         ))}
       </ProductList>
@@ -118,11 +90,14 @@ const CheckoutPage = () => {
         <h3>Total: {totalPrice} SEK</h3>
       </Total>
       <h2>Ange adressinformation</h2>
-
       <ProceedToCheckout onProceedToCheckout={onProceedToCheckout} />
-
       <div id="checkout" style={{ display: "none" }}>
-        {orderId && <StripeEmbedded cart={groupedCart} orderId={orderId} />}
+        {orderId && (
+          <StripeEmbedded
+            cart={Array.from(groupedCart.values())}
+            orderId={orderId}
+          />
+        )}
       </div>
     </CheckoutContainer>
   );

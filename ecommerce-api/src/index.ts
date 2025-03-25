@@ -22,10 +22,8 @@ import productRouter from "./routes/products";
 import customerRouter from "./routes/customers";
 import orderRouter from "./routes/orders";
 import orderItemRouter from "./routes/orderItems";
-import {
-  updateOrder,
-  updateOrderInDatabase,
-} from "./controllers/orderController";
+import { updateOrderInDatabase } from "./controllers/orderController";
+import { updateProductStock } from "./controllers/productController";
 
 app.use("/products", productRouter);
 app.use("/customers", customerRouter);
@@ -69,37 +67,26 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
   res.send({ clientSecret: session.client_secret });
 });
 
-app.get("/session_status", async (req, res) => {
-  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-
-  res.send({
-    status: session.status,
-    payment_status: session.payment_status,
-    customer_email: session.customer_details.email,
-  });
-});
-
 // När order är avklarad
 
 app.post("/stripe/webhook", async (req, res) => {
-  // Hämta event-data från request-body
   const event = req.body;
 
-  // Hantera eventet baserat på dess typ
   switch (event.type) {
     case "checkout.session.completed":
       // Hämta session-data från eventet
       const session = event.data.object;
+      const lineItems = await stripe.checkout.sessions.listLineItems(
+        session.id
+      );
 
-      console.log(session);
+      console.log(lineItems);
 
-      // Hämta order-id, payment-id, payment-status och order-status från session-data
       const orderId = session.client_reference_id;
       const paymentId = session.id;
       const paymentStatus = "Paid";
       const orderStatus = "Received";
 
-      // Uppdatera order i databasen
       try {
         await updateOrderInDatabase(
           orderId,
@@ -107,8 +94,15 @@ app.post("/stripe/webhook", async (req, res) => {
           paymentId,
           orderStatus
         );
+
+        const productName = lineItems.object.data[0].description;
+        const quantity = lineItems.object.data[0].quantity;
+
+        await updateProductStock(productName, quantity);
+
+        console.log("Product stock updated");
       } catch (error) {
-        console.error("Failed to update order:", error);
+        console.error("Failed to update order or product stock:", error);
       }
 
       break;

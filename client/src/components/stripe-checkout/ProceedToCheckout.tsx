@@ -85,30 +85,12 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
 
         await addCustomer(newCustomer);
 
-        const checkCustomerInterval = setInterval(async () => {
-          const customerFromDb = await getCustomerByEmail(newCustomer.email);
+        const customerFromDb = await getCustomerByEmail(newCustomer.email);
 
-          if (customerFromDb && customerFromDb.id) {
-            clearInterval(checkCustomerInterval);
-
-            onProceedToCheckout(customerFromDb);
-            setLoading(false);
-          }
-        }, 1000);
-
-        setFormData({
-          firstname: "",
-          lastname: "",
-          email: "",
-          phone: "",
-          street_address: "",
-          postal_code: "",
-          city: "",
-          country: "",
-        });
-
-        localStorage.removeItem("createCustomerFormData");
-        setErrorMessage("");
+        if (customerFromDb && customerFromDb.id) {
+          onProceedToCheckout(customerFromDb);
+          setLoading(false);
+        }
       }
     } catch (error) {
       setErrorMessage("Ett fel uppstod vid hämtning av kunddata.");
