@@ -15,25 +15,24 @@ import StripeEmbedded from "./StripeEmbedded";
 
 import { StyledLink } from "../styled/styledProducts/ProductCards";
 
-import { ICustomer } from "../../models/ICustomer";
 import ProceedToCheckout from "./ProceedToCheckout";
 import { placeOrder } from "../../services/orderService/placeOrder";
+import { ICustomer } from "../../models/ICustomer";
 
 const CheckoutPage = () => {
   const cartContext = useContext(CartContext);
   const cart = cartContext?.cart;
-  const [customerId, setCustomerId] = useState(null);
-
-  console.log(cart);
+  const [customer, setCustomer] = useState<ICustomer | null>(null);
+  const [orderId, setOrderId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (customerId) {
+    if (orderId) {
       const checkoutContainer = document.getElementById("checkout");
       if (checkoutContainer) {
         checkoutContainer.style.display = "block";
       }
     }
-  }, [customerId]);
+  }, [orderId]);
 
   if (cart?.length === 0) {
     return <div>Varukorgen är tom</div>;
@@ -61,11 +60,15 @@ const CheckoutPage = () => {
 
   const { groupedCart, totalPrice } = handleCheckout();
 
-  const onProceedToCheckout = async (customer: ICustomer) => {
-    try {
-      const newCustomerId = customer.id;
-      setCustomerId(newCustomerId);
+  const onProceedToCheckout = async (customerData: ICustomer) => {
+    if (!customerData || !customerData.id) {
+      console.error("Customer is undefined or missing ID", customerData);
+      return;
+    }
 
+    setCustomer(customerData);
+
+    try {
       const orderItems =
         groupedCart?.map((item) => ({
           product_id: item.product.id,
@@ -74,19 +77,14 @@ const CheckoutPage = () => {
           unit_price: item.product.price,
         })) ?? [];
 
-      const order = {
-        customer_id: newCustomerId,
-        payment_status: "unpaid",
-        payment_id: null,
-        order_status: "pending",
-        order_items: orderItems,
-      };
+      const orderResponse = await placeOrder(customerData.id, orderItems);
 
-      console.log("Sending to placeOrder:", {
-        customerId: newCustomerId,
-        orderItems,
-      });
-      await placeOrder(newCustomerId, orderItems);
+      if (orderResponse && orderResponse.order_id) {
+        setOrderId(orderResponse.order_id);
+        console.log("Order created with ID:", orderResponse.order_id);
+      } else {
+        throw new Error(`${orderId}missing in response.`);
+      }
     } catch (error) {
       console.error("Error during checkout:", error);
     }
@@ -120,12 +118,11 @@ const CheckoutPage = () => {
         <h3>Total: {totalPrice} SEK</h3>
       </Total>
       <h2>Ange adressinformation</h2>
+
       <ProceedToCheckout onProceedToCheckout={onProceedToCheckout} />
 
       <div id="checkout" style={{ display: "none" }}>
-        {customerId && (
-          <StripeEmbedded cart={groupedCart} customerId={customerId} />
-        )}
+        {orderId && <StripeEmbedded cart={groupedCart} orderId={orderId} />}
       </div>
     </CheckoutContainer>
   );

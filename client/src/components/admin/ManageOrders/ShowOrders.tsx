@@ -19,6 +19,8 @@ const ShowOrders = () => {
   const [editingOrderId, setEditingOrderId] = useState<number | null>(null);
   const [editedOrder, setEditedOrder] = useState<IOrder | null>(null);
 
+  console.log(orders);
+
   const onDeleteOrder = (id: number) => {
     setOrders((prev) => prev?.filter((order) => order.id !== id));
   };

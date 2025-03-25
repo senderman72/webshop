@@ -10,11 +10,11 @@ const stripePromise = loadStripe(
   "pk_test_51R4GrvRC90WGM6PJ2QrF7lutVEGGtMmqwefR5r1XY0hSFXc5i97MWbeYSMKVuirBU9Lt2if1r5KR16kyQkNw101u00OwJuLr1B"
 );
 
-const StripeEmbedded = ({ cart, customerId }) => {
+const StripeEmbedded = ({ cart, orderId }) => {
   const fetchClientSecret = useCallback(() => {
     console.log("Skickar följande information till backend:");
     console.log("cart:", cart);
-    console.log("customerId:", customerId);
+    console.log("customerId:", orderId);
     return fetch(
       "http://localhost:3000/stripe/create-checkout-session-embedded",
       {
@@ -24,13 +24,13 @@ const StripeEmbedded = ({ cart, customerId }) => {
         },
         body: JSON.stringify({
           cart,
-          customerId,
+          orderId,
         }),
       }
     )
       .then((res) => res.json())
       .then((data) => data.clientSecret);
-  }, [cart, customerId]);
+  }, [cart, orderId]);
 
   const options = { fetchClientSecret };
 

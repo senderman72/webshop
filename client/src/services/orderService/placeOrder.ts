@@ -1,10 +1,13 @@
 import { IOrderItem } from "../../models/IOrderItem";
-import { create } from "../serviceBase";
 
 export const placeOrder = async (
   customerId: number,
   cart: IOrderItem[]
-): Promise<{ message: string; order_id: number }> => {
+): Promise<{
+  order_id(order_id: any): unknown;
+  message: string;
+  id: number;
+}> => {
   try {
     const totalPrice = cart.reduce(
       (acc, item) => acc + item.quantity * item.unit_price,
@@ -25,9 +28,23 @@ export const placeOrder = async (
       })),
     };
 
-    const response = await create("http://localhost:3000/orders", order);
+    const response = await fetch("http://localhost:3000/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(order),
+    });
 
-    return response;
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    console.log("Order created, response from server:", data.order_id);
+
+    return data;
   } catch (error) {
     console.error("Error during order creation:", error);
     throw error;

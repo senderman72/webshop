@@ -138,6 +138,8 @@ export const createOrder = async (req: Request, res: Response) => {
       VALUES (?, ?, ?, ?, ?)
     `;
 
+    let order_id: number = -1;
+
     const params = [
       customer_id,
       total_price,
@@ -146,9 +148,11 @@ export const createOrder = async (req: Request, res: Response) => {
       payment_id,
       order_status,
     ];
+
     const [result] = await db.query<ResultSetHeader>(sql, params);
+
     if (result.insertId) {
-      const order_id: number = result.insertId;
+      order_id = result.insertId;
       const orderItems = req.body.order_items;
       for (const orderItem of orderItems) {
         const data = { ...orderItem, order_id };
@@ -156,7 +160,7 @@ export const createOrder = async (req: Request, res: Response) => {
       }
     }
 
-    res.status(201).json({ message: "Product created" });
+    res.status(201).json({ message: "Product created", order_id });
   } catch (error: unknown) {
     res.status(500).json({ error: logError(error) });
   }
@@ -204,6 +208,31 @@ export const updateOrder = async (req: Request, res: Response) => {
       : res.json({ message: "Order updated" });
   } catch (error) {
     res.status(500).json({ error: logError(error) });
+  }
+};
+
+export const updateOrderInDatabase = async (
+  orderId: string,
+  paymentStatus: string,
+  paymentId: string,
+  orderStatus: string
+) => {
+  try {
+    const sql = `
+      UPDATE orders 
+      SET payment_status = ?, payment_id = ?, order_status = ?
+      WHERE id = ?
+    `;
+    const params = [paymentStatus, paymentId, orderStatus, orderId];
+    const [result] = await db.query<ResultSetHeader>(sql, params);
+
+    if (result.affectedRows > 0) {
+      console.log(`Order ${orderId} updated successfully.`);
+    } else {
+      console.log(`No order found with ID: ${orderId}`);
+    }
+  } catch (error) {
+    console.error("Error updating order:", error);
   }
 };
 

@@ -22,6 +22,10 @@ import productRouter from "./routes/products";
 import customerRouter from "./routes/customers";
 import orderRouter from "./routes/orders";
 import orderItemRouter from "./routes/orderItems";
+import {
+  updateOrder,
+  updateOrderInDatabase,
+} from "./controllers/orderController";
 
 app.use("/products", productRouter);
 app.use("/customers", customerRouter);
@@ -31,7 +35,7 @@ app.use("/order-items", orderItemRouter);
 //Embedded
 
 app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
-  const { cart, customerId } = req.body;
+  const { cart, orderId } = req.body;
 
   const lineItems = cart.map((item) => {
     return {
@@ -59,7 +63,7 @@ app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
     ui_mode: "embedded",
     return_url:
       "http://localhost:5173/order-confirmation/{CHECKOUT_SESSION_ID}",
-    client_reference_id: customerId,
+    client_reference_id: orderId,
   });
 
   res.send({ clientSecret: session.client_secret });
@@ -76,22 +80,46 @@ app.get("/session_status", async (req, res) => {
 });
 
 // När order är avklarad
-app.post("http://localhost:5173/stripe/webhook", (request, response) => {
-  const event = request.body;
 
-  // Handle the event
+app.post("/stripe/webhook", async (req, res) => {
+  // Hämta event-data från request-body
+  const event = req.body;
+
+  // Hantera eventet baserat på dess typ
   switch (event.type) {
-    case "payment_intent.succeeded":
-      const paymentIntent = event.data.object;
-      updateOrderStatus(paymentIntent);
+    case "checkout.session.completed":
+      // Hämta session-data från eventet
+      const session = event.data.object;
+
+      console.log(session);
+
+      // Hämta order-id, payment-id, payment-status och order-status från session-data
+      const orderId = session.client_reference_id;
+      const paymentId = session.id;
+      const paymentStatus = "Paid";
+      const orderStatus = "Received";
+
+      // Uppdatera order i databasen
+      try {
+        await updateOrderInDatabase(
+          orderId,
+          paymentStatus,
+          paymentId,
+          orderStatus
+        );
+      } catch (error) {
+        console.error("Failed to update order:", error);
+      }
+
       break;
-    // ... handle other event types
+
     default:
+      // Logga eventuella ohanterade event-typ
       console.log(`Unhandled event type ${event.type}`);
   }
 
-  // Return a response to acknowledge receipt of the event
-  response.json({ received: true });
+  // Returnera ett svar för att bekräfta mottagandet av eventet
+  res.json({ received: true });
 });
 
 // Attempt to connect to the database
