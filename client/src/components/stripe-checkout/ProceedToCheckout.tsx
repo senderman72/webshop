@@ -18,6 +18,7 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
   const { addCustomer } = useCustomer();
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState(() => {
     const savedData = localStorage.getItem("createCustomerFormData");
@@ -39,6 +40,10 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
   useEffect(() => {
     localStorage.setItem("createCustomerFormData", JSON.stringify(formData));
   }, [formData]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -66,21 +71,32 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
       return;
     }
 
+    setLoading(true);
+
     try {
       const existingCustomer = await getCustomerByEmail(formData.email);
 
       if (existingCustomer && existingCustomer.id) {
         onProceedToCheckout(existingCustomer);
+        setLoading(false);
         return;
       } else {
         const newCustomer: ICustomer = { ...formData };
 
         await addCustomer(newCustomer);
 
-        onProceedToCheckout(newCustomer);
+        const checkCustomerInterval = setInterval(async () => {
+          const customerFromDb = await getCustomerByEmail(newCustomer.email);
+
+          if (customerFromDb && customerFromDb.id) {
+            clearInterval(checkCustomerInterval);
+
+            onProceedToCheckout(customerFromDb);
+            setLoading(false);
+          }
+        }, 1000);
 
         setFormData({
-          id: 0,
           firstname: "",
           lastname: "",
           email: "",
@@ -97,6 +113,7 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
     } catch (error) {
       setErrorMessage("Ett fel uppstod vid hämtning av kunddata.");
       console.error("Error fetching or creating customer:", error);
+      setLoading(false);
     }
   };
 
@@ -175,7 +192,7 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
         />
       </Inputbox>
       {errorMessage && <FormError>{errorMessage}</FormError>}
-      <AddToCartBtn type="submit">Fortsätt till checkout</AddToCartBtn>
+      <AddToCartBtn type="submit">fortsätt till checkout</AddToCartBtn>
     </Form>
   );
 };
