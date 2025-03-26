@@ -18,27 +18,50 @@ const SuccessPage = () => {
   const { paymentId } = useParams<string>();
   const [order, setOrder] = useState<IOrder | null>();
 
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchOrder = async () => {
+      if (!paymentId) {
+        console.log("paymentId is undefined");
+        return;
+      }
+
       try {
         const data = await getOrderByPaymentId(paymentId);
-        console.log(data);
         setOrder(data);
+        setLoading(false);
       } catch {
         console.log("Kunde inte hämta ordern.");
       }
     };
-    fetchOrder();
+
+    const interval = setInterval(() => {
+      fetchOrder();
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, [paymentId]);
+
+  if (loading) {
+    return (
+      <SuccessContainer>
+        <Heading>Väntar på att bekräfta bokning... häng kvar...</Heading>
+      </SuccessContainer>
+    );
+  }
 
   return (
     <SuccessContainer>
-      <Heading>Tack för din beställning!</Heading>
+      <Heading>Tack för din beställning! </Heading>
+      <Paragraph>Bokningsnummer: {order?.payment_id}</Paragraph>
+
       <Paragraph>
         Din betalning har gått igenom och din beställning är nu behandlad.
       </Paragraph>
       <Paragraph>
-        Du kommer att få en bekräftelse via e-post inom kort.
+        Du kommer att få en bekräftelse via e-post till {order?.customer_email}{" "}
+        inom kort.
       </Paragraph>
       <Paragraph>Tack för att du handlar hos oss!</Paragraph>
       <Heading>Order Detaljer</Heading>
@@ -49,13 +72,14 @@ const SuccessPage = () => {
               Produkt: {item.product_name}
             </SuccessItemParagraph>
             <SuccessItemParagraph>Antal: {item.quantity}</SuccessItemParagraph>
-            <SuccessItemParagraph>Order ID: {item.id}</SuccessItemParagraph>
+
             <SuccessItemParagraph>
               Pris: {item.unit_price} kr
             </SuccessItemParagraph>
           </SuccessOrderItem>
         ))}
       </SucessOrderListContainer>
+
       <SuccessTotalPrice>
         Totalt pris: {order?.total_price} kr
       </SuccessTotalPrice>
