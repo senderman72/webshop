@@ -61,7 +61,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
         ))
       ) : (
         <EmptyCartMessageWrapper>
-          <p>Varukorgen är tom</p>
+          <h4>Varukorgen är tom</h4>
         </EmptyCartMessageWrapper>
       )}
       <div>

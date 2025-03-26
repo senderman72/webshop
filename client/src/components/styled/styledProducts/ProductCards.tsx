@@ -5,14 +5,13 @@ import { Link } from "react-router";
 export const ProductCardsWrapper = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   place-items: center;
   place-content: center;
-  gap: 2rem;
+  gap: 1.5rem;
   padding: 0px 2rem;
   margin-top: 5rem;
 
-  /* Responsiv design */
   @media (max-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -27,7 +26,8 @@ export const ProductCardsWrapper = styled.div`
 `;
 
 export const ProductCard = styled.div`
-  width: 80%;
+  width: 100%;
+  height: 95%;
 
   background-color: ${primaryColor};
   border-radius: 8px;
@@ -37,26 +37,26 @@ export const ProductCard = styled.div`
 
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 0rem;
+  gap: 1rem;
+  padding: 0.5rem 0.5rem;
 `;
+
 export const ProductImage = styled.img`
-  width: 50%;
-  height: 80%;
-  object-fit: cover;
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
   border-radius: 8px;
-  margin-bottom: 15px;
 `;
 
 export const ProductTitle = styled.h3`
   color: #fff;
-  font-size: 1.2rem;
-  margin: 10px 0;
+  font-size: 1rem;
 `;
 
 export const ProductPrice = styled.p`
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #fff;
   font-weight: bold;
 `;
@@ -71,7 +71,7 @@ export const AddToCartBtn = styled.button`
   color: white;
   padding: 12px 24px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: bold;
   border: none;
   cursor: pointer;

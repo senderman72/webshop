@@ -18,6 +18,7 @@ import { StyledLink } from "../styled/styledProducts/ProductCards";
 import ProceedToCheckout from "./ProceedToCheckout";
 import { placeOrder } from "../../services/orderService/placeOrder";
 import { ICustomer } from "../../models/ICustomer";
+import EmptyCart from "./EmptyCart";
 
 const CheckoutPage = () => {
   const { cart } = useContext(CartContext) ?? { cart: [] };
@@ -32,7 +33,12 @@ const CheckoutPage = () => {
     }
   }, [orderId]);
 
-  if (!cart.length) return <div>Varukorgen är tom</div>;
+  if (!cart.length)
+    return (
+      <>
+        <EmptyCart />
+      </>
+    );
 
   const groupedCart = cart.reduce((acc, item) => {
     const group = acc.get(item.id) || { product: item, count: 0 };

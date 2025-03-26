@@ -74,7 +74,6 @@ app.post("/stripe/webhook", async (req, res) => {
 
   switch (event.type) {
     case "checkout.session.completed":
-      // Hämta session-data från eventet
       const session = event.data.object;
       const lineItems = await stripe.checkout.sessions.listLineItems(
         session.id

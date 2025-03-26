@@ -4,8 +4,8 @@ export const AdminHeaderWrapper = styled.div`
   margin-top: 6rem;
   text-align: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     margin-top: 10rem;
-    text-align: left;
+    font-size: 14px;
   }
 `;

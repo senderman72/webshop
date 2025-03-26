@@ -12,7 +12,7 @@ const AdminLayout = () => {
         <AdminNavigation />
       </header>
       <AdminHeaderWrapper>
-        <h1>Välj ett alternativ att administrera i sidomenyn</h1>
+        <h1>Välj ett alternativ att administrera i menyn</h1>
       </AdminHeaderWrapper>
       <Main>
         <Outlet />

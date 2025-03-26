@@ -39,10 +39,11 @@ export const AdminNavigationList = styled.ul`
 
   list-style: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     flex-direction: row;
-    gap: 1.5rem;
-    width: auto;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
   }
 `;
 
