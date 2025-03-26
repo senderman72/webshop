@@ -95,24 +95,26 @@ app.post("/stripe/webhook", async (req, res) => {
           orderStatus
         );
 
-        const productName = lineItems.object.data[0].description;
-        const quantity = lineItems.object.data[0].quantity;
+        for (const item of lineItems.data) {
+          const productName = item.description;
+          const quantity = item.quantity;
 
-        await updateProductStock(productName, quantity);
-
-        console.log("Product stock updated");
+          try {
+            await updateProductStock(productName, quantity);
+            console.log(`Stock updated successfully for ${productName}`);
+          } catch (error) {
+            console.error(`Failed to update stock for ${productName}:`, error);
+          }
+        }
       } catch (error) {
-        console.error("Failed to update order or product stock:", error);
+        console.error("Error updating order:", error);
       }
-
       break;
 
     default:
-      // Logga eventuella ohanterade event-typ
       console.log(`Unhandled event type ${event.type}`);
   }
 
-  // Returnera ett svar för att bekräfta mottagandet av eventet
   res.json({ received: true });
 });
 
