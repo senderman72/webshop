@@ -29,6 +29,17 @@ export const Paragraph = styled.p`
   margin-bottom: 20px;
 `;
 
+export const BookingParagraph = styled.p`
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 1.2rem;
+  color: #333;
+  overflow-wrap: break-word;
+  text-align: center;
+  max-width: 100%;
+  margin-bottom: 20px;
+`;
+
 export const ConfirmationMessage = styled.p`
   font-size: 1.2rem;
   color: #55a500;
@@ -40,7 +51,7 @@ export const ConfirmationMessage = styled.p`
 export const SucessOrderListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 100%;
   margin-top: 20px;
   padding: 0 20px;
 `;

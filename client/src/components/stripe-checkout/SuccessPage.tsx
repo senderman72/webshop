@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  BookingParagraph,
   Heading,
   Paragraph,
   SuccessContainer,
@@ -54,7 +55,7 @@ const SuccessPage = () => {
   return (
     <SuccessContainer>
       <Heading>Tack för din beställning! </Heading>
-      <Paragraph>Bokningsnummer: {order?.payment_id}</Paragraph>
+      <BookingParagraph>Bokningsnummer: {order?.payment_id}</BookingParagraph>
 
       <Paragraph>
         Din betalning har gått igenom och din beställning är nu behandlad.
