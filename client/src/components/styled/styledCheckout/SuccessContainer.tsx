@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const SuccessContainer = styled.div`
+  width: 80%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,4 +35,39 @@ export const ConfirmationMessage = styled.p`
   font-weight: bold;
   text-align: center;
   margin-top: 20px;
+`;
+
+export const SucessOrderListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  margin-top: 20px;
+  padding: 0 20px;
+`;
+
+export const SuccessOrderItem = styled.div`
+  display: flex;
+
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+`;
+
+export const SuccessItemParagraph = styled.h3`
+  font-size: 1.1rem;
+  color: #333;
+  margin: 4px 0;
+  color: #003060;
+`;
+
+export const SuccessTotalPrice = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #003060;
+  text-align: center;
 `;

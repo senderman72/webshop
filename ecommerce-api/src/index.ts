@@ -108,6 +108,7 @@ app.post("/stripe/webhook", async (req, res) => {
       } catch (error) {
         console.error("Error updating order:", error);
       }
+
       break;
 
     default:

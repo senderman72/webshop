@@ -45,7 +45,7 @@ export const Heading3 = styled.h3`
 `;
 
 export const Paragraph = styled.p`
-  font-size: 1rem;
+  font-size: 1.2rem;
   margin: 5px 0;
   color: #333;
 
@@ -61,18 +61,14 @@ export const OrderItemsList = styled.ul`
 
 export const OrderItem = styled.li`
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 15px;
 
   padding: 15px;
   background-color: #fff;
   margin-bottom: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 10px;
-  }
 `;
 
 export const ItemParagraph = styled.p`

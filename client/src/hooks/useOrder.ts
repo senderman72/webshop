@@ -9,6 +9,7 @@ const useOrder = (id: number) => {
     const fetchOrder = async () => {
       try {
         const data = await getOrder(id);
+        console.log(data);
         setOrder(data);
       } catch {
         console.log("Kunde inte hämta ordern.");

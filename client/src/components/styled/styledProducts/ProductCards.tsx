@@ -8,9 +8,8 @@ export const ProductCardsWrapper = styled.div`
   grid-template-columns: repeat(6, 1fr);
   place-items: center;
   place-content: center;
-  gap: 1.5rem;
-  padding: 0px 2rem;
-  margin-top: 5rem;
+  gap: 1rem;
+  padding: 0px 0.7rem;
 
   @media (max-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
@@ -28,42 +27,53 @@ export const ProductCardsWrapper = styled.div`
 export const ProductCard = styled.div`
   width: 100%;
   height: 95%;
-
-  background-color: ${primaryColor};
+  background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease-in-out;
+  opacity: 0.9;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  padding: 0.5rem 0.5rem;
+  padding: 0rem 0.5rem;
+
+  &:hover {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+`;
+
+export const ProductImageContainer = styled.div`
+  display: flex;
+  width: 80%;
+  height: 50%;
 `;
 
 export const ProductImage = styled.img`
   width: 100%;
-  height: 200px;
+  height: 90%;
   object-fit: contain;
   border-radius: 8px;
 `;
 
 export const ProductTitle = styled.h3`
-  color: #fff;
+  color: ${primaryColor};
   font-size: 1rem;
 `;
 
 export const ProductPrice = styled.p`
   font-size: 0.9rem;
-  color: #fff;
+  color: ${primaryColor};
   font-weight: bold;
 `;
 
 export const DescriptionProduct = styled.p`
   font-size: 0.9;
-  color: #fff;
+  color: ${primaryColor};
 `;
 
 export const AddToCartBtn = styled.button`

@@ -45,8 +45,7 @@ export const getOrderById = async (req: Request, res: Response) => {
 
   try {
     const sql = `
-      SELECT 
-        *, 
+      SELECT  *, 
         orders.created_at AS orders_created_at, 
         customers.created_at AS customers_created_at 
       FROM orders 
@@ -55,34 +54,7 @@ export const getOrderById = async (req: Request, res: Response) => {
       WHERE orders.id = ?
     `;
     const [rows] = await db.query<IOrder[]>(sql, [id]);
-    // res.json(rows)
-    // return;
-
-    rows && rows.length > 0
-      ? res.json(formatOrderDetails(id, rows))
-      : res.status(404).json({ message: "Order not found" });
-  } catch (error) {
-    res.status(500).json({ error: logError(error) });
-  }
-};
-
-export const getOrderByPaymentId = async (req: Request, res: Response) => {
-  const id: string = req.params.id;
-
-  try {
-    const sql = `
-      SELECT 
-        *, 
-        orders.id AS order_id,
-        orders.created_at AS orders_created_at, 
-        customers.created_at AS customers_created_at 
-      FROM orders 
-      LEFT JOIN customers ON orders.customer_id = customers.id
-      LEFT JOIN order_items ON orders.id = order_items.order_id
-      WHERE orders.payment_id = ?
-    `;
-    const [rows] = await db.query<IOrder[]>(sql, [id]);
-    // res.json(rows)
+    // res.json(rows);
     // return;
 
     rows && rows.length > 0
@@ -120,6 +92,33 @@ const formatOrderDetails = (rows) => ({
       }))
     : [],
 });
+
+export const getOrderByPaymentId = async (req: Request, res: Response) => {
+  const id: string = req.params.id;
+
+  try {
+    const sql = `
+      SELECT 
+        *, 
+        orders.id AS order_id,
+        orders.created_at AS orders_created_at, 
+        customers.created_at AS customers_created_at 
+      FROM orders 
+      LEFT JOIN customers ON orders.customer_id = customers.id
+      LEFT JOIN order_items ON orders.id = order_items.order_id
+      WHERE orders.payment_id = ?
+    `;
+    const [rows] = await db.query<IOrder[]>(sql, [id]);
+    // res.json(rows)
+    // return;
+
+    rows && rows.length > 0
+      ? res.json(formatOrderDetails(rows))
+      : res.status(404).json({ message: "Order not found" });
+  } catch (error) {
+    res.status(500).json({ error: logError(error) });
+  }
+};
 
 export const createOrder = async (req: Request, res: Response) => {
   const {

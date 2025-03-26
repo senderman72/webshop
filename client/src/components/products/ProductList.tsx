@@ -4,6 +4,7 @@ import {
   ProductCard,
   ProductCardsWrapper,
   ProductImage,
+  ProductImageContainer,
   ProductPrice,
   ProductTitle,
   StyledLink,
@@ -18,8 +19,9 @@ const ProductList = () => {
       <ProductCardsWrapper>
         {products?.map((product) => (
           <ProductCard key={product.id}>
-            <ProductImage src={product.image} alt={product.name} />
-
+            <ProductImageContainer>
+              <ProductImage src={product.image} alt={product.name} />
+            </ProductImageContainer>
             <ProductTitle>{product.name}</ProductTitle>
             <ProductPrice>{product.price} SEK</ProductPrice>
             <StyledLink to={`/products/${product.id}`}>mer info</StyledLink>
