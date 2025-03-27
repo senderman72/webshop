@@ -57,16 +57,12 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (
-      formData.firstname.trim() === "" ||
-      formData.lastname.trim() === "" ||
-      formData.email.trim() === "" ||
-      formData.phone.trim() === "" ||
-      formData.street_address.trim() === "" ||
-      formData.postal_code.trim() === "" ||
-      formData.city.trim() === "" ||
-      formData.country.trim() === ""
-    ) {
+    const fields = Object.keys(formData) as (keyof typeof formData)[];
+    const isEmpty =
+      fields.some((field) => formData[field].trim() === "") ||
+      fields.some((field) => formData[field].trim().match(/^\s*$/));
+
+    if (isEmpty) {
       setErrorMessage("Alla fält måste fyllas i.");
       return;
     }
