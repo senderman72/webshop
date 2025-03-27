@@ -30,6 +30,7 @@ const SuccessPage = () => {
 
       try {
         const data = await getOrderByPaymentId(paymentId);
+        console.log(data);
         setOrder(data);
         setLoading(false);
       } catch {
@@ -75,7 +76,7 @@ const SuccessPage = () => {
             <SuccessItemParagraph>Antal: {item.quantity}</SuccessItemParagraph>
 
             <SuccessItemParagraph>
-              Pris: {item.unit_price} kr
+              Pris: {order?.total_price} kr
             </SuccessItemParagraph>
           </SuccessOrderItem>
         ))}
