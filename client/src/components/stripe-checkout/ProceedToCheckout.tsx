@@ -73,6 +73,9 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
       const existingCustomer = await getCustomerByEmail(formData.email);
 
       if (existingCustomer && existingCustomer.id) {
+        localStorage.removeItem("createCustomerFormData");
+        localStorage.removeItem("cart");
+
         onProceedToCheckout(existingCustomer);
         setLoading(false);
         return;

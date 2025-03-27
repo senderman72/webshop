@@ -31,7 +31,6 @@ app.use("/orders", orderRouter);
 app.use("/order-items", orderItemRouter);
 
 //Embedded
-
 app.post("/stripe/create-checkout-session-embedded", async (req, res) => {
   const { cart, orderId } = req.body;
 
@@ -79,6 +78,7 @@ app.post("/stripe/webhook", async (req, res) => {
         session.id
       );
 
+      console.log(event);
       console.log(lineItems);
 
       const orderId = session.client_reference_id;
