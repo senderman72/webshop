@@ -55,17 +55,17 @@ const SuccessPage = () => {
 
   return (
     <SuccessContainer>
-      <Heading>Tack för din beställning! </Heading>
+      <Heading>Tack för din beställning! 🤩 </Heading>
       <BookingParagraph>Bokningsnummer: {order?.payment_id}</BookingParagraph>
 
       <Paragraph>
-        Din betalning har gått igenom och din beställning är nu behandlad.
+        Din betalning har gått igenom och din beställning är nu behandlad. ✅
       </Paragraph>
       <Paragraph>
-        Du kommer att få en bekräftelse via e-post till {order?.customer_email}{" "}
-        inom kort.
+        Du kommer att få en bekräftelse via e-post 📩 till{" "}
+        {order?.customer_email} inom kort.
       </Paragraph>
-      <Paragraph>Tack för att du handlar hos oss!</Paragraph>
+      <Paragraph>Tack för att du handlar hos oss! 🥳</Paragraph>
       <Heading>Order Detaljer</Heading>
       <SucessOrderListContainer>
         {order?.order_items.map((item) => (
@@ -74,10 +74,10 @@ const SuccessPage = () => {
               Produkt: {item.product_name}
             </SuccessItemParagraph>
             <SuccessItemParagraph>Antal: {item.quantity}</SuccessItemParagraph>
-
             <SuccessItemParagraph>
               Pris: {order?.total_price} kr
             </SuccessItemParagraph>
+            📦
           </SuccessOrderItem>
         ))}
       </SucessOrderListContainer>

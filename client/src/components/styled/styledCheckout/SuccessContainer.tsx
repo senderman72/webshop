@@ -10,7 +10,6 @@ export const SuccessContainer = styled.div`
   height: 100vh;
   padding: 20px;
   background-color: #f4f4f4;
-  font-family: "Arial", sans-serif;
 `;
 
 export const Heading = styled.h1`
@@ -21,7 +20,8 @@ export const Heading = styled.h1`
 `;
 
 export const Paragraph = styled.p`
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: bold;
   color: #333;
   line-height: 1.6;
   text-align: center;
@@ -69,7 +69,7 @@ export const SuccessOrderItem = styled.div`
 `;
 
 export const SuccessItemParagraph = styled.h3`
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #333;
   margin: 4px 0;
   color: #003060;

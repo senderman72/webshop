@@ -44,7 +44,7 @@ const ShowOrderItems = () => {
           <OrderItem key={item.id}>
             <Paragraph>Product: {item.product_name}</Paragraph>
             <Paragraph>quantity: {item.quantity}</Paragraph>
-            <Paragraph>Price: {item.unit_price} kr</Paragraph>
+            <Paragraph>Price: {order.total_price} kr</Paragraph>
           </OrderItem>
         ))}
       </OrderDetailsContainer>
