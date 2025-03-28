@@ -58,9 +58,10 @@ const ProceedToCheckout = ({ onProceedToCheckout }: CreateCustomerProps) => {
     e.preventDefault();
 
     const fields = Object.keys(formData) as (keyof typeof formData)[];
-    const isEmpty =
-      fields.some((field) => formData[field].trim() === "") ||
-      fields.some((field) => formData[field].trim().match(/^\s*$/));
+    const isEmpty = fields.some((field) => {
+      const value = formData[field];
+      return typeof value === "string" && value.trim() === "";
+    });
 
     if (isEmpty) {
       setErrorMessage("Alla fält måste fyllas i.");
